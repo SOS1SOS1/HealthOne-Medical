@@ -21,7 +21,7 @@
             if (empty($errors)) {
 
                 // checks if that username and password exist in users table
-                $q = "SELECT username FROM Users WHERE username = '$u' AND password = SHA2('$p', 512)";
+                $q = "SELECT username FROM USERS WHERE username = '$u' AND password = SHA2('$p', 512)";
                 // runs the query
                 $r = @mysqli_query($dbc, $q);
 
