@@ -34,7 +34,7 @@
                     $_SESSION['user'] = $row['username'];
                     //echo 'working';
                     // redirects user to table page
-                    header('Location: main.php');
+                    header('Location: home.php');
                     exit();
 
                 } else {
