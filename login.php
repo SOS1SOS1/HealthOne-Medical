@@ -2,7 +2,7 @@
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         # requires that we are able to connect to the database using are hidden php file
-        require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
+        require_once('/moredata/shantim/etc/mysqli_connect.php');
 
         function check_login($dbc, $user = '', $pass = '') {
             $errors = [];
