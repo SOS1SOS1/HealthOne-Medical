@@ -53,6 +53,6 @@
     }
 
     $page_title = "Login";
-    include('includes/header.html');
-    include('includes/loginPage.html');
+    //include('includes/header.html');
+    include('includes/Index.html');
 ?>
