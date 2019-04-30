@@ -39,8 +39,8 @@ table td{
 h1{
   color:#cc0223;
 }
-a, a:link, a:active{
-  color:black;
+a, a:link, a:active > table{
+  color:#ffaa00;
   text-decoration: none;
   padding-left:10px;
 }

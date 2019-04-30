@@ -22,13 +22,12 @@
     <h1>HealthOne Medical</h1>
 
     <form method = "post" action = home.php>
-      <input type="submit" name="test" value="test">
     </form>
   </body>
 </html>
 
 <?php
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
 
     require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
 
@@ -38,13 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
     echo '<table style="width:50%">';
-    echo '<tr colspan=3><th>';
-    echo $results['lastName'] . ", " . $results['firstName'] .'</th></tr>';
     foreach($r as $row){
+      echo '<tr><th colspan=3 style="text-align: left;">';
+      echo '<a href="patient.php?id=' . $row['patient_id'] .'">' . $row['lastName'] . ", " . $row['firstName'] .'</a></th></tr>';
       echo '<tr><td>';
       echo $row['address'] . '</td><td>' . $row['phoneNumber'] . '</td><td>' . $row['email'] . '</td></tr>';
     }
     echo'</table>';
 
-  }
+
  ?>
