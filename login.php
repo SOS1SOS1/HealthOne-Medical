@@ -2,7 +2,7 @@
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         # requires that we are able to connect to the database using are hidden php file
-        require_once('/moredata/shantim/etc/mysqli_connect.php');
+        require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
 
         function check_login($dbc, $user = '', $pass = '') {
             $errors = [];
@@ -34,7 +34,7 @@
                     $_SESSION['user'] = $row['username'];
                     //echo 'working';
                     // redirects user to table page
-                    header('Location: table.php');
+                    header('Location: main.php');
                     exit();
 
                 } else {
