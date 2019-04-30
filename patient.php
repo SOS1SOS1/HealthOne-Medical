@@ -16,6 +16,6 @@
     $r = mysqli_query($dbc,$q);
     $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-    
+
 
  ?>
