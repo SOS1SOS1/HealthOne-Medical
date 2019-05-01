@@ -33,7 +33,13 @@
 
     echo '<p> Level of Coverage: ' . $results['name'] . '</p>';
 
-    echo '<p> Primary Care Doctor: ' . $results['firstName'] . '</p>';
+    $q = "SELECT PRIMARY_DOCTOR.firstName, PRIMARY_DOCTOR.lastName FROM PRIMARY_DOCTOR INNER JOIN PATIENT ON patient_id = primary_id WHERE patient_id = $id";
+    $r = mysqli_query($dbc,$q);
+    $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+
+    //echo '<p> Primary Care Doctor: ' . $results['firstName'] . " " . $results['lastName'] . '</p>';
+    echo '<p> Primary Care Doctor: ' . '<a href="doctor.php?id=' . $results['primary_id'] .'">' . $results['firstName'] . " " . $results['lastName'] . '</a></p>';
+                                        <a href="patient.php?id=' . $row['patient_id'] .'">
 
     echo "<a href='home.php'>Go back</a>";
  ?>
