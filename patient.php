@@ -27,5 +27,7 @@
     echo '<p> Phone Number: ' . $results['phoneNumber'] . '</p>';
     echo '<p> Email: ' . $results['email'] . '</p>';
 
+    echo '<p> Level of Coverage: ' . . '</p>';
+
     echo "<a href='home.php'>Go back</a>";
  ?>
