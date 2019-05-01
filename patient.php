@@ -27,4 +27,5 @@
     echo '<p> Phone Number: ' . $results['phoneNumber'] . '</p>';
     echo '<p> Email: ' . $results['email'] . '</p>';
 
+    echo "<a href='home.php'>Go back</a>";
  ?>
