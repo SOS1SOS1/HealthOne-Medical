@@ -27,7 +27,13 @@
     echo '<p> Phone Number: ' . $results['phoneNumber'] . '</p>';
     echo '<p> Email: ' . $results['email'] . '</p>';
 
-    echo '<p> Level of Coverage: ' . . '</p>';
+    $q = "SELECT INSURANCE.name FROM INSURANCE INNER JOIN PATIENT ON patient_id = insurance_id WHERE patient_id = $id";
+    $r = mysqli_query($dbc,$q);
+    $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+
+    echo '<p> Level of Coverage: ' . $results['name'] . '</p>';
+
+    echo '<p> Primary Care Doctor: ' . $results['firstName'] . '</p>';
 
     echo "<a href='home.php'>Go back</a>";
  ?>
