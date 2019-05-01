@@ -12,30 +12,30 @@
 
 <?php
 
-# checks that there is an id and that it is a number
-if (isset($_GET['id']) && is_numeric($_GET['id'])) {  // from table.php
-    $id = $_GET['id'];
-}
+  # checks that there is an id and that it is a number
+  if (isset($_GET['id']) && is_numeric($_GET['id'])) {  // from table.php
+      $id = $_GET['id'];
+  }
 
-require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
+  require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
 
-$q = "SELECT * FROM DOCTOR where doctor_id = $id";
-$r = mysqli_query($dbc,$q);
-$results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+  $q = "SELECT * FROM DOCTOR where doctor_id = $id";
+  $r = mysqli_query($dbc,$q);
+  $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-echo '<h2>' . $results['lastName'] . ", " . $results['firstName'] . "</h2>";
-echo '<p> Address: ' . $results['address'] . '</p>';
-echo '<p> Phone Number: ' . $results['phoneNumber'] . '</p>';
-echo '<p> Email: ' . $results['email'] . '</p>';
+  echo '<h2>' . $results['lastName'] . ", " . $results['firstName'] . "</h2>";
+  echo '<p> Address: ' . $results['address'] . '</p>';
+  echo '<p> Phone Number: ' . $results['phoneNumber'] . '</p>';
+  echo '<p> Email: ' . $results['email'] . '</p>';
 
-$q = "SELECT INSURANCE.name FROM INSURANCE INNER JOIN PATIENT ON patient_id = insurance_id WHERE patient_id = $id";
-$r = mysqli_query($dbc,$q);
-$results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+  $q = "SELECT HOSPITAL.name FROM HOSPITAL, DOCTOR INNER JOIN AFFILIATION ON DOCTOR.doctor_id = doctor WHERE doctor_id = $id and hospital_id = hospital";
+  $r = mysqli_query($dbc,$q);
+  $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-echo '<p> Level of Coverage: ' . $results['name'] . '</p>';
+  foreach($results as $row) {
+    echo '<p> Hospital affiliations: ' . $row['name'] . '</p>';
+  }
 
-echo '<p> Primary Care Doctor: ' . $results['firstName'] . '</p>';
-
-echo "<a href='home.php'>Go back</a>";
+  echo "<a href='home.php'>Go back</a>";
 
  ?>
