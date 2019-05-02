@@ -31,14 +31,14 @@
   echo '<p> Phone Number: ' . $results['phoneNumber'] . '</p>';
   echo '<p> Email: ' . $results['email'] . '</p>';
 
-  $q = "SELECT HOSPITAL.name FROM HOSPITAL, DOCTOR INNER JOIN AFFILIATION ON DOCTOR.doctor_id = doctor WHERE doctor_id = $id and hospital_id = hospital";
+  $q = "SELECT HOSPITAL.hospital_id, HOSPITAL.name FROM HOSPITAL, DOCTOR INNER JOIN AFFILIATION ON DOCTOR.doctor_id = doctor WHERE doctor_id = $id and hospital_id = hospital";
   $r = @mysqli_query($dbc,$q);
   $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
   echo '<p> Hospital Affiliation(s): </p>';
   echo '<ul>';
   foreach($r as $row) {
-     echo '<li>' . $row['name'] . '</li>';
+     echo '<li><a href="hospital.php? id=' . $row['hospital_id'] . '">' . $row['name'] . '</a></li>';
   }
   echo '</ul>';
 
