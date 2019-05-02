@@ -13,8 +13,11 @@
 <?php
 
   # checks that there is an id and that it is a number
-  if (isset($_GET['id']) && is_numeric($_GET['id'])) {  // from table.php
-      $id = $_GET['id'];
+  if (isset($_GET['id_doc']) && is_numeric($_GET['id_doc'])) {  // from table.php
+      $id = $_GET['id_doc'];
+  }
+  if (isset($_GET['id_pat']) && is_numeric($_GET['id_pat'])) {  // from table.php
+      $id_patient = $_GET['id_pat'];
   }
 
   require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
@@ -32,13 +35,13 @@
   $r = @mysqli_query($dbc,$q);
   $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-  echo '<p> Hospital affiliations: </p>';
+  echo '<p> Hospital Affiliation(s): </p>';
   echo '<ul>';
   foreach($r as $row) {
      echo '<li>' . $row['name'] . '</li>';
   }
   echo '</ul>';
 
-  echo "<a href='home.php'>Go back</a>";
+  echo '<a href="patient.php?id='. $id_patient .'">Go back</a>';
 
  ?>

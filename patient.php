@@ -37,7 +37,7 @@
     $r = mysqli_query($dbc,$q);
     $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-    echo '<p> Primary Care Doctor: ' . '<a href="doctor.php?id=' . $results['primary_id'] .'">' . $results['firstName'] . " " . $results['lastName'] . '</a></p>';
+    echo '<p> Primary Care Doctor: ' . '<a href="doctor.php?id_pat=' . $id . '&id_doc=' . $results['primary_id'] .'">' . $results['firstName'] . " " . $results['lastName'] . '</a></p>';
 
     echo "<a href='home.php'>Go back</a>";
  ?>
