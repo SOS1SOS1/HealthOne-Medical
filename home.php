@@ -16,10 +16,11 @@
             //exit();
         }
         echo '<br>';
-        echo '<div id="homeLogout">';
+        echo '<div class="homeLogout">';
         echo $_SESSION['user'];
         echo '<br>';
         echo '<a href="logout.php"> Logout </a></br>';
+        echo '<a href="addClient.php"> New Client </a></br>';
         echo '</div>';
     ?>
   </head>
