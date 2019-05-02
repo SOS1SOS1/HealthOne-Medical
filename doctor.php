@@ -32,12 +32,12 @@
   $r = @mysqli_query($dbc,$q);
   $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-  echo mysqli_num_rows($r);
-
-  echo '<p> Hospital affiliations: ';
-  foreach($results as $row) {
-     echo $row['name'] . '</p>';
+  echo '<p> Hospital affiliations: </p>';
+  echo '<ul>';
+  foreach($r as $row) {
+     echo '<li>' . $row['name'] . '</li>';
   }
+  echo '</ul>';
 
   echo "<a href='home.php'>Go back</a>";
 
