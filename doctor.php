@@ -29,11 +29,14 @@
   echo '<p> Email: ' . $results['email'] . '</p>';
 
   $q = "SELECT HOSPITAL.name FROM HOSPITAL, DOCTOR INNER JOIN AFFILIATION ON DOCTOR.doctor_id = doctor WHERE doctor_id = $id and hospital_id = hospital";
-  $r = mysqli_query($dbc,$q);
+  $r = @mysqli_query($dbc,$q);
   $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
+  echo mysqli_num_rows($r);
+
+  echo '<p> Hospital affiliations: ';
   foreach($results as $row) {
-    echo '<p> Hospital affiliations: ' . $row['name'] . '</p>';
+     echo $row['name'] . '</p>';
   }
 
   echo "<a href='home.php'>Go back</a>";
