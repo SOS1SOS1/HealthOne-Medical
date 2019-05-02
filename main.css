@@ -44,7 +44,20 @@ a, a:link, a:active{
   text-decoration: none;
   padding-left:10px;
 }
-
+#homeLogout{
+  text-align:right;
+  float:right;
+  background-color:#cc0223;
+  color:white;
+  border: none;
+   color: white;
+   padding: 10px;
+   text-align: center;
+   text-decoration: none;
+   display: inline-block;
+   font-size: 14px;
+   border-radius: 9px;
+}
 table{
   width:100px;
 }
