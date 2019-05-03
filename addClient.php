@@ -14,13 +14,16 @@
       <h3>Address: <input type = "text" name = "address" size = "30" maxlength="50"></h3>
       <h3>Phone Number: <input type="numbernumber" name = "pNum" pattern="\d*" minLength="10" maxlength="10"></h3>
       <h3>Email: <input type = "email" name = "email" size = "25" maxlength="30"></h3>
+      <h3>Primary Doctor: </h3>
+        <label>First Name - </label><input type = "text" name = "dFirstName" size = "15" maxlength="30"></h3>
+        <label>Last Name - </label><input type = "text" name = "dLastName" size = "15" maxlength="30"></h3>
       <h3>Level of Coverage: </h3>
         <select name = "coverage">
           <option value = "Bronze">Bronze</option>
           <option value = "Silver">Silver</option>
           <option value = "Gold">Gold</option>
         </select>
-      <h3><input class = "submit" type = "submit" name - "submit" value = "Add Client"></h3>
+      <h3><input class = "submit" type = "submit" name = "submit" value = "Add Client" onclick = "document.location.href='home.php'"></h3>
     </form>
 
   </body>
@@ -71,6 +74,20 @@
             $email = mysqli_real_escape_string($dbc, trim($_POST['email']));
         }
 
+        // checks for a primary care doctor first name
+        if (empty($_POST['dFirstName'])) {
+            $errors[] = 'You forgot to enter the client\'s primary care doctor\'s first name.';
+        } else {
+            $dFirst = mysqli_real_escape_string($dbc, trim($_POST['dFirstName']));
+        }
+
+        // checks for a primary care doctor first name
+        if (empty($_POST['dLastName'])) {
+            $errors[] = 'You forgot to enter the client\'s primary care doctor\'s last name.';
+        } else {
+            $dLast = mysqli_real_escape_string($dbc, trim($_POST['dLastName']));
+        }
+
         // checks for the level of coverage
         if (empty($_POST['coverage'])) {
             $errors[] = 'You forgot to enter the client\'s level of insurance coverage.';
@@ -78,27 +95,63 @@
             $coverage = mysqli_real_escape_string($dbc, trim($_POST['coverage']));
         }
 
+        $q = "SELECT COUNT(patient_id) FROM PATIENT where firstName = '$first_name' and lastName = '$last_name' and address = '$address'";
+        $r = @mysqli_query($dbc, $q);
+        $row = mysqli_fetch_array($r, MYSQLI_NUM);
+        $patients = $row[0];
+
         // checks if there were no errors
-        if (empty($errors)) {
+        if ($patients == 0) {
+          if (empty($errors)) {
 
-            // checks that the song is unique
-            $q = "INSERT INTO PATIENT (firstName, lastName, address, phoneNumber, email) VALUES ('$first_name', '$last_name', '$address', '$phone_number', '$email')";
-            $r = @mysqli_query($dbc, $q);
-            $q = "INSERT INTO INSURANCE (name) VALUES ('$coverage')";
-            $r = @mysqli_query($dbc, $q);
+              // gets the primary care doctors id
+              $q = "SELECT doctor_id FROM DOCTOR where firstName = '$dFirst' and lastName = '$dLast'";
+              $r = @mysqli_query($dbc, $q);
+              $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
+              // checks if that doctor exists
+              if (mysqli_num_rows($r) == 1) {
+                $doc = $row['doctor_id'];
+
+                // inserts the new patient
+                $q = "INSERT INTO PATIENT (firstName, lastName, address, phoneNumber, email, primaryDoctor) VALUES ('$first_name', '$last_name', '$address', '$phone_number', '$email',  $doc)";
+                $r = @mysqli_query($dbc, $q);
+
+                // inserts patient's insurance plan
+                $q = "INSERT INTO INSURANCE (name) VALUES ('$coverage')";
+                $r = @mysqli_query($dbc, $q);
+
+                // go back to home page
+                header('Location: home.php');
+
+              } else {
+                echo '<p> The following error(s) occured:<br>';
+                echo " - Doctor entered doesn't exist in table.";
+                echo '<p> Please enter the doctor\'s information </p>';
+
+                // go to doctor form
+              }
+
+          } else {
+
+              # reports the errors
+              echo '<p> The following error(s) occured:<br>';
+              foreach ($errors as $msg) {
+                  echo " - $msg<br>\n";
+              }
+              echo '</p><p> Please try again. </p>';
+
+            // end of errors if statement
+          }
         } else {
-
-            # reports the errors
             echo '<p> The following error(s) occured:<br>';
-            foreach ($errors as $msg) {
-                echo " - $msg<br>\n";
-            }
-            echo '</p><p> Please try again. </p>';
-
-          // end of errors if statement
+            echo " - Patient already exists.";
         }
+
+    } else {
+      echo 'refresh';
     }
 
     mysqli_close($dbc);
+    include("footer.html");
 ?>

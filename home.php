@@ -15,17 +15,19 @@
             header('Location: login.php');
             //exit();
         }
-        echo '<br>';
-        echo '<div class="homeLogout">';
-        echo $_SESSION['user'];
-        echo '<br>';
-        echo '<a href="logout.php"> Logout </a></br>';
-        echo '<a href="addClient.php"> New Client </a></br>';
-        echo '</div>';
+
     ?>
   </head>
   <body>
-    <h1>HealthOne Medical</h1>
+    <nav class="navmain">
+      <div class="homeLogout">
+        <?php  echo $_SESSION['user']; ?>
+        <a href="logout.php"> Logout</a>
+        <a href="addClient.php"> New Client </a>
+      </div>
+      <h1>HealthOne Medical</h1>
+    </nav>
+
 
     <form method = "post" action = home.php>
     </form>
@@ -40,14 +42,15 @@
     $r = mysqli_query($dbc,$q);
     $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-    echo '<table style="width:50%">';
+    echo '<table>';
     foreach($r as $row){
       echo '<tr><th colspan=3 style="text-align: left;">';
       echo '<a href="patient.php?id=' . $row['patient_id'] .'">' . $row['lastName'] . ", " . $row['firstName'] .'</a></th></tr>';
       echo '<tr><td>';
-      echo $row['address'] . '</td><td>' . $row['phoneNumber'] . '</td><td>' . $row['email'] . '</td></tr>';
+      echo $row['address'] . '</td><td >' . $row['phoneNumber'] . '</td><td>' . $row['email'] . '</td></tr>';
     }
     echo'</table>';
 
+    include("footer.html");
 
  ?>

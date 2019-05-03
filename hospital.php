@@ -35,4 +35,5 @@ echo '<p> Phone Number: ' . $results['phoneNumber'] . '</p>';
 
 echo '<a href="doctor.php?id_doc=' . $id_doctor . '&id_pat=' . $id_patient . '">Go back</a>';
 
+include("footer.html");
  ?>

@@ -44,4 +44,5 @@
 
   echo '<a href="patient.php?id='. $id_patient .'">Go back</a>';
 
+include("footer.html");
  ?>
