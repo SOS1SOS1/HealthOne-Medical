@@ -6,18 +6,19 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
   </head>
   <body>
+    <h1>HealthOne Medical</h1>
 
     <form action = "addClient.php" method = "post">
       <h3>First Name: <input type = "text" name = "fName" size = "15" maxlength="30"></h3>
       <h3>Last Name: <input type = "text" name = "lName" size = "15" maxlength="30"></h3>
       <h3>Address: <input type = "text" name = "address" size = "30" maxlength="50"></h3>
-      <h3>Phone Number: <input type="text" name = "pNum" pattern="\d*" maxlength="10"></h3>
-      <h3>Email: <input type = "text" name = "email" size = "25" maxlength="30"></h3>
+      <h3>Phone Number: <input type="numbernumber" name = "pNum" pattern="\d*" minLength="10" maxlength="10"></h3>
+      <h3>Email: <input type = "email" name = "email" size = "25" maxlength="30"></h3>
       <h3>Level of Coverage: </h3>
         <select name = "coverage">
-          <option value = "Bronze"><label>Bronze</label>
-          <option value = "Silver"><label>Silver</label>
-          <option value = "Gold"><label>Gold</label>
+          <option value = "Bronze">Bronze</option>
+          <option value = "Silver">Silver</option>
+          <option value = "Gold">Gold</option>
         </select>
       <h3><input class = "submit" type = "submit" name - "submit" value = "Add Client"></h3>
     </form>
@@ -76,9 +77,6 @@
         } else {
             $coverage = mysqli_real_escape_string($dbc, trim($_POST['coverage']));
         }
-
-
-        // WORK HERE
 
         // checks if there were no errors
         if (empty($errors)) {
