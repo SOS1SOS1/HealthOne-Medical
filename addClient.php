@@ -15,9 +15,9 @@
       <h3>Email: <input type = "text" name = "email" size = "25" maxlength="30"></h3>
       <h3>Level of Coverage: </h3>
         <select name = "coverage">
-          <option id = "b" value = "Bronze"><label for = "b">Bronze</label>
-          <option id = "s" value = "Silver"><label for = "s">Silver</label>
-          <option id = "g" value = "Gold"><label for = "g">Gold</label>
+          <option value = "Bronze"><label>Bronze</label>
+          <option value = "Silver"><label>Silver</label>
+          <option value = "Gold"><label>Gold</label>
         </select>
       <h3><input class = "submit" type = "submit" name - "submit" value = "Add Client"></h3>
     </form>
@@ -72,9 +72,9 @@
 
         // checks for the level of coverage
         if (empty($_POST['coverage'])) {
-            $errors[] = 'You forgot to enter the client\'s email.';
+            $errors[] = 'You forgot to enter the client\'s level of insurance coverage.';
         } else {
-            $email = mysqli_real_escape_string($dbc, trim($_POST['email']));
+            $coverage = mysqli_real_escape_string($dbc, trim($_POST['coverage']));
         }
 
 
@@ -85,6 +85,8 @@
 
             // checks that the song is unique
             $q = "INSERT INTO PATIENT (firstName, lastName, address, phoneNumber, email) VALUES ('$first_name', '$last_name', '$address', '$phone_number', '$email')";
+            $r = @mysqli_query($dbc, $q);
+            $q = "INSERT INTO INSURANCE (name) VALUES ('$coverage')";
             $r = @mysqli_query($dbc, $q);
 
         } else {
