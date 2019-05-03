@@ -38,7 +38,7 @@
   echo '<p> Hospital Affiliation(s): </p>';
   echo '<ul>';
   foreach($r as $row) {
-     echo '<li><a href="hospital.php? id=' . $row['hospital_id'] . '">' . $row['name'] . '</a></li>';
+      echo '<li><a href="hospital.php?id_doc=' . $id . '&id_hos=' . $row['hospital_id'] . '&id_pat=' . $id_patient .'">' . $row['name'] . '</a></li>';
   }
   echo '</ul>';
 

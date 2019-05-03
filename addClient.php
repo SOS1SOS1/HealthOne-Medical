@@ -14,9 +14,11 @@
       <h3>Phone Number: <input type="text" name = "pNum" pattern="\d*" maxlength="10"></h3>
       <h3>Email: <input type = "text" name = "email" size = "25" maxlength="30"></h3>
       <h3>Level of Coverage: </h3>
-        <input type = "radio" name = "coverage" id = "b" value = "Bronze"><label for = "b">Bronze</label>
-        <input type = "radio" name = "coverage" id = "s" value = "Silver"><label for = "s">Silver</label>
-        <input type = "radio" name = "coverage" id = "g" value = "Gold"><label for = "g">Gold</label>
+        <select name = "coverage">
+          <option id = "b" value = "Bronze"><label for = "b">Bronze</label>
+          <option id = "s" value = "Silver"><label for = "s">Silver</label>
+          <option id = "g" value = "Gold"><label for = "g">Gold</label>
+        </select>
       <h3><input class = "submit" type = "submit" name - "submit" value = "Add Client"></h3>
     </form>
 
@@ -69,6 +71,12 @@
         }
 
         // checks for the level of coverage
+        if (empty($_POST['coverage'])) {
+            $errors[] = 'You forgot to enter the client\'s email.';
+        } else {
+            $email = mysqli_real_escape_string($dbc, trim($_POST['email']));
+        }
+
 
         // WORK HERE
 
@@ -76,33 +84,8 @@
         if (empty($errors)) {
 
             // checks that the song is unique
-            $q = "SELECT * FROM Top_Spotify_Tracks where name = '$song_name' and artists = '$artist' and duration_ms = $time";
+            $q = "INSERT INTO PATIENT (firstName, lastName, address, phoneNumber, email) VALUES ('$first_name', '$last_name', '$address', '$phone_number', '$email')";
             $r = @mysqli_query($dbc, $q);
-
-            // if song wasn't already in table
-            if (mysqli_num_rows($r) == 0) {
-
-                // makes the query
-                $q = "UPDATE Top_Spotify_Tracks SET name = '$song_name', artists = '$artist', duration_ms = $time WHERE id = $id";
-                $r = @mysqli_query($dbc, $q);
-
-                // checks if the query affected 1 row like it should have
-                if (mysqli_affected_rows($dbc) == 1) {
-                    // print a message
-                    echo '<p> The song has been edited. </p>';
-                } else {
-                    // print a message
-                    echo '<p> The song could not be edited due to a system error. We apologize for any inconvenience. </p>';
-                    // print an error message
-                    echo '<p>' . mysqli_error($dbc) . '<br>Query: ' . $q . '</p>';
-                }
-
-            } else {
-
-                # song already in table
-                echo '<p> That song already exists in the table. </p>';
-
-            }
 
         } else {
 

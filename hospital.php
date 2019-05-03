@@ -15,8 +15,14 @@
 
 require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
 
-if (isset($_GET['id']) && is_numeric($_GET['id'])) {  // from table.php
-    $id = $_GET['id'];
+if (isset($_GET['id_doc']) && is_numeric($_GET['id_doc'])) {  // from table.php
+    $id_doctor = $_GET['id_doc'];
+}
+if (isset($_GET['id_hos']) && is_numeric($_GET['id_hos'])) {  // from table.php
+    $id = $_GET['id_hos'];
+}
+if (isset($_GET['id_pat']) && is_numeric($_GET['id_pat'])) {  // from table.php
+    $id_patient = $_GET['id_pat'];
 }
 
 $q = "SELECT * FROM HOSPITAL WHERE hospital_id = $id";
@@ -27,5 +33,6 @@ echo '<h2>' . $results['name'] . "</h2>";
 echo '<p> Location: ' . $results['location'] . '</p>';
 echo '<p> Phone Number: ' . $results['phoneNumber'] . '</p>';
 
+echo '<a href="doctor.php?id_doc=' . $id_doctor . '&id_pat=' . $id_patient . '">Go back</a>';
 
  ?>
