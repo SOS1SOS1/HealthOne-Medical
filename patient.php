@@ -6,7 +6,14 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
   </head>
   <body>
-    <h1>HealthOne Medical</h1>
+    <nav class="navmain">
+      <div class="homeLogout">
+        <?php  echo $_SESSION['user']; ?>
+        <a href="logout.php"> Logout</a>
+        <a href="addClient.php"> New Client </a>
+      </div>
+      <h1>HealthOne Medical</h1>
+    </nav>
   </body>
 </html>
 
@@ -27,18 +34,33 @@
     echo '<p> Phone Number: ' . $results['phoneNumber'] . '</p>';
     echo '<p> Email: ' . $results['email'] . '</p>';
 
+    $docID = $results['primaryDoctor'];
+
     $q = "SELECT INSURANCE.name FROM INSURANCE INNER JOIN PATIENT ON patient_id = insurance_id WHERE patient_id = $id";
     $r = mysqli_query($dbc,$q);
     $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
     echo '<p> Level of Coverage: ' . $results['name'] . '</p>';
 
-    $q = "SELECT PRIMARY_DOCTOR.primary_id, PRIMARY_DOCTOR.firstName, PRIMARY_DOCTOR.lastName FROM PRIMARY_DOCTOR INNER JOIN PATIENT ON patient_id = primary_id WHERE patient_id = $id";
+    $q = "SELECT DOCTOR.firstName, DOCTOR.lastName FROM DOCTOR where doctor_id = $docID";
     $r = mysqli_query($dbc,$q);
     $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-    echo '<p> Primary Care Doctor: ' . '<a href="doctor.php?id_pat=' . $id . '&id_doc=' . $results['primary_id'] .'">' . $results['firstName'] . " " . $results['lastName'] . '</a></p>';
+    echo '<p> Primary Care Doctor: ' . '<a href="doctor.php?id_pat=' . $id . '&id_doc=' . $docID .'">' . $results['firstName'] . " " . $results['lastName'] . '</a></p>';
 
-    echo "<a href='home.php'>Go back</a>";
+    $q = "SELECT * FROM PRESCRIPTION INNER JOIN PATIENT ON patient_id = $id WHERE doctor_id = $docID";
+    $r = mysqli_query($dbc,$q);
+    $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+
+    echo '<p> Prescription(s): </p>';
+    echo '<ul>';
+    foreach($r as $row) {
+        echo '<li>' . $row['description'] . $row['date'] . $row['dosage'] . $row['duration'] . $row['size'] . $row['numRefill'] . '</li>';
+    }
+    echo '</ul>';
+
+    echo "<a href='addDrug.php'>Add New Prescription</a><br><br>";
+
+    echo "<a href='home.php'>Go Back</a>";
     include("footer.html");
  ?>

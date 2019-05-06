@@ -6,7 +6,14 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
   </head>
   <body>
-    <h1>HealthOne Medical</h1>
+    <nav class="navmain">
+      <div class="homeLogout">
+        <?php  echo $_SESSION['user']; ?>
+        <a href="logout.php"> Logout</a>
+        <a href="addClient.php"> New Client </a>
+      </div>
+      <h1>HealthOne Medical</h1>
+    </nav>
 
     <form action = "addClient.php" method = "post">
       <h3>First Name: <input type = "text" name = "fName" size = "15" maxlength="30"></h3>
