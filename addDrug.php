@@ -6,9 +6,17 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
   </head>
   <body>
-    <h1>HealthOne Medical</h1>
+    <nav class="navmain">
+      <div class="homeLogout">
+        <?php  echo $_SESSION['user']; ?>
+        <a href="logout.php"> Logout</a>
+        <a href="addClient.php"> New Client </a>
+      </div>
+      <h1>HealthOne Medical</h1>
+    </nav>
 
     <form action = "addClient.php" method = "post">
+        <h3>Drug Name: <input type = "text" name = "drug" size = "15" maxlength="30"></h3>
         <h3>Description: <input type = "text" name = "desc" size = "15" maxlength="30"></h3>
         <h3>Start Date: <input type = "date" name = "startDate" value = "2019-01-01"></h3>
         <h3>End Date: <input type = "date" name = "endDate" value = "2019-01-01"></h3>
@@ -23,6 +31,14 @@
 </html>
 
 <?php
+    # checks that there is an id and that it is a number
+    if (isset($_GET['id_doc']) && is_numeric($_GET['id_doc'])) {  // from table.php
+        $id_doc = $_GET['id_doc'];
+    }
+    if (isset($_GET['id_pat']) && is_numeric($_GET['id_pat'])) {  // from table.php
+        $id_pat = $_GET['id_pat'];
+    }
+
     # requires that we are able to connect to the database using are hidden php file
     require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
 
@@ -32,63 +48,63 @@
         // errors array
         $errors = [];
 
-        // checks for a first name
+        // checks for a drug name
         if (empty($_POST['desc'])) {
             $errors[] = 'You forgot to enter the description of the prescription.';
         } else {
             $desc = mysqli_real_escape_string($dbc, trim($_POST['desc']));
         }
 
-        // checks for a last name
+        // checks for a start date
         if (empty($_POST['startDate'])) {
             $errors[] = 'You forgot to enter the start date of the prescription.';
         } else {
             $start_date = mysqli_real_escape_string($dbc, trim($_POST['startDate']));
         }
 
-        // checks for an address
+        // checks for a start date
+        if (empty($_POST['startDate'])) {
+            $errors[] = 'You forgot to enter the start date of the prescription.';
+        } else {
+            $start_date = mysqli_real_escape_string($dbc, trim($_POST['startDate']));
+        }
+
+        // checks for an end date
         if (empty($_POST['endDate'])) {
             $errors[] = 'You forgot to enter the end date of the prescription.';
         } else {
             $end_date = mysqli_real_escape_string($dbc, trim($_POST['endDate']));
         }
 
-        // checks for a phone number
-        if (empty($_POST['pNum'])) {
-            $errors[] = 'You forgot to enter the client\'s phone number.';
+        // checks for a dosage
+        if (empty($_POST['dosage'])) {
+            $errors[] = 'You forgot to enter the dosage of the prescription.';
         } else {
-            $phone_number = mysqli_real_escape_string($dbc, trim($_POST['pNum']));
+            $dosage = mysqli_real_escape_string($dbc, trim($_POST['dosage']));
         }
 
-        // checks for an email
-        if (empty($_POST['email'])) {
-            $errors[] = 'You forgot to enter the client\'s email.';
+        // checks for a duration
+        if (empty($_POST['duration'])) {
+            $errors[] = 'You forgot to enter the dosage of the prescription.';
         } else {
-            $email = mysqli_real_escape_string($dbc, trim($_POST['email']));
+            $duration = mysqli_real_escape_string($dbc, trim($_POST['duration']));
         }
 
-        // checks for a primary care doctor first name
-        if (empty($_POST['dFirstName'])) {
-            $errors[] = 'You forgot to enter the client\'s primary care doctor\'s first name.';
+        // checks for a size
+        if (empty($_POST['size'])) {
+            $errors[] = 'You forgot to enter the dosage of the prescription.';
         } else {
-            $dFirst = mysqli_real_escape_string($dbc, trim($_POST['dFirstName']));
+            $size = mysqli_real_escape_string($dbc, trim($_POST['size']));
         }
 
-        // checks for a primary care doctor first name
-        if (empty($_POST['dLastName'])) {
-            $errors[] = 'You forgot to enter the client\'s primary care doctor\'s last name.';
+        // checks for number of refills
+        if (empty($_POST['dosage'])) {
+            $errors[] = 'You forgot to enter the number of refills for the prescription.';
         } else {
-            $dLast = mysqli_real_escape_string($dbc, trim($_POST['dLastName']));
+            $refills = mysqli_real_escape_string($dbc, trim($_POST['refills']));
         }
 
-        // checks for the level of coverage
-        if (empty($_POST['coverage'])) {
-            $errors[] = 'You forgot to enter the client\'s level of insurance coverage.';
-        } else {
-            $coverage = mysqli_real_escape_string($dbc, trim($_POST['coverage']));
-        }
-
-        $q = "SELECT COUNT(patient_id) FROM PATIENT where firstName = '$first_name' and lastName = '$last_name' and address = '$address'";
+        $q = "SELECT COUNT(patient_id) FROM PRESCRIPTION where startDate = '$start_date' and endDate = '$end_date'";
         $r = @mysqli_query($dbc, $q);
         $row = mysqli_fetch_array($r, MYSQLI_NUM);
         $patients = $row[0];

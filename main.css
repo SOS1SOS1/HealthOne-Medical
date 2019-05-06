@@ -4,7 +4,7 @@ html{
   background-color:#fcfaf7;
 }
 body{
-  margin-top: 75px;
+  margin-top: 90px;
 }
 input[type=text], select, input[type=number], input[type=password] {
   padding: 10px 20px 10px 10px;
@@ -44,7 +44,7 @@ a, a:link, a:active{
   color:#ffaa00;
   text-decoration: none;
   padding-left:10px;
-  color:#ffaa00;;
+  color:#cc0223;
 
   -o-transition:.5s;
   -ms-transition:.5s;
@@ -53,7 +53,7 @@ a, a:link, a:active{
   transition:.5s;
 }
 a:hover{
-  color:#cc0223;
+  color:black;
 }
 .homeLogout{
   text-align:right;
@@ -64,7 +64,7 @@ a:hover{
 }
 
 table{
-  width:55%;
+  width:auto;
   text-align:left;
 }
 td{
@@ -87,7 +87,7 @@ td{
   position: fixed;
   left: 0;
   top: 0;
-  background: rgb(25, 25, 25, .9);
+  background-color: white;
   width:100%;
 box-shadow: 0px 2px 10px grey;
 }

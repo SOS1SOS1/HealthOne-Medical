@@ -59,7 +59,7 @@
     }
     echo '</ul>';
 
-    echo "<a href='addDrug.php'>Add New Prescription</a><br><br>";
+    echo '<a href="addDrug.php?id_doc=' . $docID . '&id_pat=' . $id . '">Add New Prescription</a><br><br>';
 
     echo "<a href='home.php'>Go Back</a>";
     include("footer.html");
