@@ -49,8 +49,8 @@
         $errors = [];
 
         // checks for a drug name
-        if (empty($_POST['desc'])) {
-            $errors[] = 'You forgot to enter the description of the prescription.';
+        if (empty($_POST['drug'])) {
+            $errors[] = 'You forgot to enter the name of the drug.';
         } else {
             $desc = mysqli_real_escape_string($dbc, trim($_POST['desc']));
         }
