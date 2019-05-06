@@ -8,11 +8,11 @@
   <body>
     <nav class="navmain">
       <div class="homeLogout">
-        <?php  echo $_SESSION['user']; ?>
-        <a href="logout.php"> Logout</a>
+        <?php  echo $_SESSION['user']; ?><br>
+        <a href="logout.php"> Logout</a><br>
         <a href="addClient.php"> New Client </a>
       </div>
-      <h1>HealthOne Medical</h1>
+      <a href="home.php"><h1>HealthOne Medical</h1></a>
     </nav>
 
     <form action = "addClient.php" method = "post">
@@ -30,7 +30,8 @@
           <option value = "Silver">Silver</option>
           <option value = "Gold">Gold</option>
         </select>
-      <h3><input class = "submit" type = "submit" name = "submit" value = "Add Client" onclick = "document.location.href='home.php'"></h3>
+        <br>
+      <a href="home.php"> <input id="submit" type="submit" name="submit" value="Add Client"></a>
     </form>
 
   </body>
@@ -128,6 +129,8 @@
                 $q = "INSERT INTO INSURANCE (name) VALUES ('$coverage')";
                 $r = @mysqli_query($dbc, $q);
 
+
+
                 // go back to home page
                 header('Location: home.php');
 
@@ -137,6 +140,7 @@
                 echo '<p> Please enter the doctor\'s information </p>';
 
                 // go to doctor form
+
               }
 
           } else {
@@ -155,8 +159,6 @@
             echo " - Patient already exists.";
         }
 
-    } else {
-      echo 'refresh';
     }
 
     mysqli_close($dbc);

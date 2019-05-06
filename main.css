@@ -41,11 +41,8 @@ h1{
   color:#cc0223;
 }
 a, a:link, a:active{
-  color:#ffaa00;
   text-decoration: none;
-  padding-left:10px;
   color:#cc0223;
-
   -o-transition:.5s;
   -ms-transition:.5s;
   -moz-transition:.5s;
@@ -56,15 +53,14 @@ a:hover{
   color:black;
 }
 .homeLogout{
-  text-align:right;
+  text-align:center;
   float:right;
   color:#cc0223;
-  padding-right:10px;
-  padding-top:20px;
+  padding: 5px 10px 0px 10px;
 }
 
 table{
-  width:auto;
+  width:75%;
   text-align:left;
 }
 td{
