@@ -27,12 +27,8 @@
 <?php
 require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
 
-# checks that the form was submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-  header('Location:http://shantim.smtchs.org/HealthOne_Medical/home.php');
-  exit;
 
-}
+
 
  ?>

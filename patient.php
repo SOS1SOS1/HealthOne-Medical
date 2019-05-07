@@ -48,14 +48,18 @@
 
     echo '<p> Primary Care Doctor: ' . '<a href="doctor.php?id_pat=' . $id . '&id_doc=' . $docID .'">' . $results['firstName'] . " " . $results['lastName'] . '</a></p>';
 
-    $q = "SELECT Drug.name FROM DRUG INNER JOIN PRESCRIPTION ON PRESCRIPTION.drug_id = DRUG.drug_id WHERE doctor_id = $docID and patient_id = $id";
+    $q = "SELECT * FROM DRUG INNER JOIN PRESCRIPTION ON PRESCRIPTION.drug_id = DRUG.drug_id WHERE patient_id = $id";
     $r = mysqli_query($dbc,$q);
     $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
+    // TODO: also show start and end date for prescription
     echo '<p> Prescription(s): </p>';
     echo '<ul>';
     foreach($r as $row) {
-        echo '<li>' . $row['name'] . '</li>';
+        echo '<li>' . $row['name'] . '<ul>';
+          echo '<li> Purpose - ' . $row['purpose'] . '</li>';
+          echo '<li> Possible Side Effects - ' . $row['sideEffects'] . '</li>';
+        echo '</ul></li>';
     }
     echo '</ul>';
 

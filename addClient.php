@@ -103,6 +103,9 @@
             $coverage = mysqli_real_escape_string($dbc, trim($_POST['coverage']));
         }
 
+
+
+
         $q = "SELECT COUNT(patient_id) FROM PATIENT where firstName = '$first_name' and lastName = '$last_name' and address = '$address'";
         $r = @mysqli_query($dbc, $q);
         $row = mysqli_fetch_array($r, MYSQLI_NUM);
@@ -129,6 +132,12 @@
                 $q = "INSERT INTO INSURANCE (name) VALUES ('$coverage')";
                 $r = @mysqli_query($dbc, $q);
 
+          if(isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['hospitalname'])){
+            $firstname = $_POST['firstname'];
+            $lastname = $_POST['lastname'];
+            $hospitalname = $_POST['hospitalname'];
+            $q = "INSERT INTO HOSPTAL (firstname, lastname, hospitalname) VALUES ('$firstname', '$lastname', '$hospitalname')";
+          }
 
 
                 // go back to home page
@@ -141,7 +150,20 @@
 
                 // go to doctor form
 
+                echo '<form action="addClient.php" method="post">';
+                echo '<label>First Name</label><input type="text" name="firstname">';
+                echo '<label>Last Name</label><input type="text" name="lastname">';
+                echo '<select name="hospitalname">';
+                  $q = "SELECT * FROM HOSPITAL";
+                  $r = @mysqli_query($dbc, $q);
+                  $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
+                  foreach($r as $results){
+                    echo '<option value='. $results['name'] . '>' . $results['name'] . '</option>';
+                  }
+                echo '</select>';
+                echo '<input type="submit" name="addDoctor" id="submit">';
+                echo '</form>';
 
               }
 

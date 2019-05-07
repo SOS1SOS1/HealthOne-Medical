@@ -17,7 +17,7 @@
 
     <form action = "addDrug.php" method = "post">
         <h3>Drug Name: <input type = "text" name = "drug" size = "15" maxlength="30"></h3>
-        <h3>Description: <input type = "text" name = "desc" size = "15" maxlength="30"></h3>
+        <h3>Description: <input type = "text" name = "desc" size = "30" maxlength="100"></h3>
         <h3>Start Date: <input type = "date" name = "startDate" value = "2019-01-01"></h3>
         <h3>End Date: <input type = "date" name = "endDate" value = "2019-01-01"></h3>
         <h3>Dosage: <input type="text" name = "dosage" maxlength="25"></h3>
@@ -25,8 +25,8 @@
         <h3>Size: <input type="number" name = "size" pattern="\d*" minLength="1" maxlength="5"></h3>
         <h3>Number of Refills: <input type="number" name = "refills" pattern="\d*" minLength="1" maxlength="5"></h3>
 
-        <input type="hidden" name="docID" value="<?php if (isset($_GET['id_doc']) && is_numeric($_GET['id_doc'])) $id_doc = $_GET['id_doc']; ?>">
-        <input type="hidden" name="patID" value="<?php if (isset($_GET['id_pat']) && is_numeric($_GET['id_pat'])) $id_pat = $_GET['id_pat']; ?>">
+        <input type="hidden" name="docID" value="<?php if (isset($_GET['id_doc']) && is_numeric($_GET['id_doc'])) echo $_GET['id_doc']; ?>">
+        <input type="hidden" name="patID" value="<?php if (isset($_GET['id_pat']) && is_numeric($_GET['id_pat'])) echo $_GET['id_pat']; ?>">
 
         <h3><input class = "submit" type = "submit" name = "submit" value = "Add Drug"></h3>
     </form>
@@ -101,6 +101,20 @@
             $refills = mysqli_real_escape_string($dbc, trim($_POST['refills']));
         }
 
+        // checks for patient's id
+        if (empty($_POST['docID'])) {
+            $errors[] = 'Couldn\'t find patient\'s id.';
+        } else {
+            $id_doc = mysqli_real_escape_string($dbc, trim($_POST['docID']));
+        }
+
+        // checks for doctor's id
+        if (empty($_POST['patID'])) {
+            $errors[] = 'Couldn\'t find doctor\'s id.';
+        } else {
+            $id_pat = mysqli_real_escape_string($dbc, trim($_POST['patID']));
+        }
+
         $q = "SELECT drug_id FROM DRUG where DRUG.name = '$drug'";
         $r = mysqli_query($dbc,$q);
         $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
@@ -116,11 +130,6 @@
             // checks if there were no errors
             if ($drugs == 0) {
                 if (empty($errors)) {
-                    // checks the drug exists
-                    $q = "SELECT drug_id FROM DRUG where name = '$drug'";
-                    $r = @mysqli_query($dbc, $q);
-                    $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
-
                     // inserts the new patient
                     $q = "INSERT INTO PRESCRIPTION (patient_id, doctor_id, drug_id, description, startDate, endDate, dosage, duration, size, numRefill) VALUES ('$id_pat', '$id_doc', '$drugID', '$desc', '$start_date',  '$end_date', '$dosage', '$duration', '$size', '$refills')";
                     $r = @mysqli_query($dbc, $q);
@@ -144,6 +153,8 @@
         }
 
     }
+
+    echo '<a href="patient.php?id='. $id_pat .'">Go back</a>';
 
     mysqli_close($dbc);
     include("footer.html");
