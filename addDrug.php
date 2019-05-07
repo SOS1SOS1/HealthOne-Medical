@@ -32,7 +32,7 @@
         // errors array
         $errors = [];
 
-        // checks for a first name
+        // checks for a description
         if (empty($_POST['desc'])) {
             $errors[] = 'You forgot to enter the description of the prescription.';
         } else {
@@ -54,10 +54,10 @@
         }
 
         // checks for a phone number
-        if (empty($_POST['pNum'])) {
-            $errors[] = 'You forgot to enter the client\'s phone number.';
+        if (empty($_POST['dosage'])) {
+            $errors[] = 'You forgot to enter the dosage of the prescription.';
         } else {
-            $phone_number = mysqli_real_escape_string($dbc, trim($_POST['pNum']));
+            $phone_number = mysqli_real_escape_string($dbc, trim($_POST['dosage']));
         }
 
         // checks for an email
