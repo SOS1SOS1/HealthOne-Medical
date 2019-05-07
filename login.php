@@ -54,5 +54,5 @@
 
     $page_title = "Login";
     //include('includes/header.html');
-    include('Index.html');
+    include('index.html');
 ?>
