@@ -132,7 +132,7 @@
 
 
                 // go back to home page
-                header('Location: home.php');
+
 
               } else {
                 echo '<p> The following error(s) occured:<br>';
@@ -140,6 +140,8 @@
                 echo '<p> Please enter the doctor\'s information </p>';
 
                 // go to doctor form
+
+
 
               }
 
@@ -161,6 +163,7 @@
 
     }
 
+    echo "<a href='home.php'>Go Back</a>";
     mysqli_close($dbc);
     include("footer.html");
 ?>

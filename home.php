@@ -26,31 +26,29 @@
         <a href="addClient.php"> New Client </a>
       </div>
       <a href="home.php"><h1>HealthOne Medical</h1></a>
+      <a href="testingtingz.php">click for tests</a>
     </nav>
 
+    <?php
 
-    <form method = "post" action = home.php>
-    </form>
+        require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
+
+        $q = "SELECT * FROM PATIENT";
+        $r = mysqli_query($dbc,$q);
+        $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+
+        echo '<table>';
+        foreach($r as $row){
+          echo '<tr><th colspan=3 style="text-align: left;">';
+          echo '<a href="patient.php?id=' . $row['patient_id'] .'">' . $row['lastName'] . ", " . $row['firstName'] .'</a></th></tr>';
+          echo '<tr><td>';
+          echo $row['address'] . '</td><td >' . $row['phoneNumber'] . '</td><td>' . $row['email'] . '</td></tr>';
+        }
+        echo'</table>';
+
+        include("footer.html");
+
+     ?>
+
   </body>
 </html>
-
-<?php
-
-    require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
-
-    $q = "SELECT * FROM PATIENT";
-    $r = mysqli_query($dbc,$q);
-    $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
-
-    echo '<table>';
-    foreach($r as $row){
-      echo '<tr><th colspan=3 style="text-align: left;">';
-      echo '<a href="patient.php?id=' . $row['patient_id'] .'">' . $row['lastName'] . ", " . $row['firstName'] .'</a></th></tr>';
-      echo '<tr><td>';
-      echo $row['address'] . '</td><td >' . $row['phoneNumber'] . '</td><td>' . $row['email'] . '</td></tr>';
-    }
-    echo'</table>';
-
-    include("footer.html");
-
- ?>

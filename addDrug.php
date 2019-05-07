@@ -15,15 +15,19 @@
       <h1>HealthOne Medical</h1>
     </nav>
 
-    <form action = "addClient.php" method = "post">
+    <form action = "addDrug.php" method = "post">
         <h3>Drug Name: <input type = "text" name = "drug" size = "15" maxlength="30"></h3>
         <h3>Description: <input type = "text" name = "desc" size = "15" maxlength="30"></h3>
         <h3>Start Date: <input type = "date" name = "startDate" value = "2019-01-01"></h3>
         <h3>End Date: <input type = "date" name = "endDate" value = "2019-01-01"></h3>
-        <h3>Dosage: <input type="number" name = "dosage" pattern="\d*" minLength="1" maxlength="4"></h3>
+        <h3>Dosage: <input type="text" name = "dosage" maxlength="25"></h3>
         <h3>Duration: <input type = "text" name = "duration" size = "25" maxlength="30"></h3>
         <h3>Size: <input type="number" name = "size" pattern="\d*" minLength="1" maxlength="5"></h3>
         <h3>Number of Refills: <input type="number" name = "refills" pattern="\d*" minLength="1" maxlength="5"></h3>
+
+        <input type="hidden" name="docID" value="<?php if (isset($_GET['id_doc']) && is_numeric($_GET['id_doc'])) $id_doc = $_GET['id_doc']; ?>">
+        <input type="hidden" name="patID" value="<?php if (isset($_GET['id_pat']) && is_numeric($_GET['id_pat'])) $id_pat = $_GET['id_pat']; ?>">
+
         <h3><input class = "submit" type = "submit" name = "submit" value = "Add Drug"></h3>
     </form>
 
@@ -31,13 +35,6 @@
 </html>
 
 <?php
-    # checks that there is an id and that it is a number
-    if (isset($_GET['id_doc']) && is_numeric($_GET['id_doc'])) {  // from table.php
-        $id_doc = $_GET['id_doc'];
-    }
-    if (isset($_GET['id_pat']) && is_numeric($_GET['id_pat'])) {  // from table.php
-        $id_pat = $_GET['id_pat'];
-    }
 
     # requires that we are able to connect to the database using are hidden php file
     require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
@@ -48,18 +45,18 @@
         // errors array
         $errors = [];
 
+        // checks for a drug name
+        if (empty($_POST['drug'])) {
+            $errors[] = 'You forgot to enter the name of the drug.';
+        } else {
+            $drug = mysqli_real_escape_string($dbc, trim($_POST['drug']));
+        }
+
         // checks for a description
         if (empty($_POST['desc'])) {
             $errors[] = 'You forgot to enter the description of the prescription.';
         } else {
             $desc = mysqli_real_escape_string($dbc, trim($_POST['desc']));
-        }
-
-        // checks for a start date
-        if (empty($_POST['startDate'])) {
-            $errors[] = 'You forgot to enter the start date of the prescription.';
-        } else {
-            $start_date = mysqli_real_escape_string($dbc, trim($_POST['startDate']));
         }
 
         // checks for a start date
@@ -85,80 +82,67 @@
 
         // checks for a duration
         if (empty($_POST['duration'])) {
-            $errors[] = 'You forgot to enter the dosage of the prescription.';
+            $errors[] = 'You forgot to enter the duration of the prescription.';
         } else {
             $duration = mysqli_real_escape_string($dbc, trim($_POST['duration']));
         }
 
         // checks for a size
         if (empty($_POST['size'])) {
-            $errors[] = 'You forgot to enter the dosage of the prescription.';
+            $errors[] = 'You forgot to enter the size of the prescription.';
         } else {
             $size = mysqli_real_escape_string($dbc, trim($_POST['size']));
         }
 
         // checks for number of refills
-        if (empty($_POST['dosage'])) {
+        if (empty($_POST['refills'])) {
             $errors[] = 'You forgot to enter the number of refills for the prescription.';
         } else {
             $refills = mysqli_real_escape_string($dbc, trim($_POST['refills']));
         }
 
-        $q = "SELECT COUNT(patient_id) FROM PRESCRIPTION where startDate = '$start_date' and endDate = '$end_date'";
-        $r = @mysqli_query($dbc, $q);
-        $row = mysqli_fetch_array($r, MYSQLI_NUM);
-        $patients = $row[0];
+        $q = "SELECT drug_id FROM DRUG where DRUG.name = '$drug'";
+        $r = mysqli_query($dbc,$q);
+        $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
+        $drugID = $row['drug_id'];
+        // if the drug exists
+        if (mysqli_num_rows($r) == 1) {
+            // then it checks if the prescription already exists
+            $q = "SELECT COUNT(patient_id) FROM PRESCRIPTION where drug_id = $drugID and doctor_id = $id_doc and startDate = '$start_date' and endDate = '$end_date' and patient_id = $id_pat";
+            $r = @mysqli_query($dbc, $q);
+            $row = mysqli_fetch_array($r, MYSQLI_NUM);
+            $drugs = $row[0];
 
-        // checks if there were no errors
-        if ($patients == 0) {
-          if (empty($errors)) {
+            // checks if there were no errors
+            if ($drugs == 0) {
+                if (empty($errors)) {
+                    // checks the drug exists
+                    $q = "SELECT drug_id FROM DRUG where name = '$drug'";
+                    $r = @mysqli_query($dbc, $q);
+                    $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-              // gets the primary care doctors id
-              $q = "SELECT doctor_id FROM DOCTOR where firstName = '$dFirst' and lastName = '$dLast'";
-              $r = @mysqli_query($dbc, $q);
-              $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
-
-              // checks if that doctor exists
-              if (mysqli_num_rows($r) == 1) {
-                $doc = $row['doctor_id'];
-
-                // inserts the new patient
-                $q = "INSERT INTO PATIENT (firstName, lastName, address, phoneNumber, email, primaryDoctor) VALUES ('$first_name', '$last_name', '$address', '$phone_number', '$email',  $doc)";
-                $r = @mysqli_query($dbc, $q);
-
-                // inserts patient's insurance plan
-                $q = "INSERT INTO INSURANCE (name) VALUES ('$coverage')";
-                $r = @mysqli_query($dbc, $q);
-
-                // go back to home page
-                header('Location: home.php');
-
-              } else {
+                    // inserts the new patient
+                    $q = "INSERT INTO PRESCRIPTION (patient_id, doctor_id, drug_id, description, startDate, endDate, dosage, duration, size, numRefill) VALUES ('$id_pat', '$id_doc', '$drugID', '$desc', '$start_date',  '$end_date', '$dosage', '$duration', '$size', '$refills')";
+                    $r = @mysqli_query($dbc, $q);
+                } else {
+                    # reports the errors
+                    echo '<p> The following error(s) occured:<br>';
+                    foreach ($errors as $msg) {
+                        echo " - $msg<br>\n";
+                    }
+                    echo '</p><p> Please try again. </p>';
+                    // end of errors if statement
+                }
+            } else {
                 echo '<p> The following error(s) occured:<br>';
-                echo " - Doctor entered doesn't exist in table.";
-                echo '<p> Please enter the doctor\'s information </p>';
+                echo " - Prescription already exists.";
+            }
 
-                // go to doctor form
-              }
-
-          } else {
-
-              # reports the errors
-              echo '<p> The following error(s) occured:<br>';
-              foreach ($errors as $msg) {
-                  echo " - $msg<br>\n";
-              }
-              echo '</p><p> Please try again. </p>';
-
-            // end of errors if statement
-          }
         } else {
-            echo '<p> The following error(s) occured:<br>';
-            echo " - Patient already exists.";
+              echo '<p> The following error(s) occured:<br>';
+              echo " - Drug does not exist.";
         }
 
-    } else {
-      echo 'refresh';
     }
 
     mysqli_close($dbc);

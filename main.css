@@ -5,6 +5,8 @@ html{
 }
 body{
   margin-top: 90px;
+  height:100vh;
+  padding-bottom:10px;
 }
 input[type=text], select, input[type=number], input[type=password] {
   padding: 10px 20px 10px 10px;
@@ -62,6 +64,7 @@ a:hover{
 
 table{
   width:75%;
+  height:auto;
   text-align:left;
 }
 td{
