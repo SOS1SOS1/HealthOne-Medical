@@ -109,6 +109,21 @@
 
 
 
+        if(isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['hospitalname']) && isset($_POST['specialty']) && isset($_POST['dPNum']) && isset($_POST['demail']) && isset($_POST['daddress'])){
+          echo "help me";
+          $firstname = mysqli_real_escape_string($dbc, trim($_POST['firstname']));
+          $lastname = mysqli_real_escape_string($dbc, trim($_POST['lastname']));;
+          $hospitalname = mysqli_real_escape_string($dbc, trim($_POST['hospitalname']));
+          $specialty = $_POST['specialty'];
+          $dphone = $_POST['dPNum'];
+          $demail = $_POST['demail'];
+          $daddress = $_POST['daddress'];
+
+          //echo $firstname . $lastname . $hospitalname . $specialty .
+          $q = "INSERT INTO DOCTOR (specialty, firstName, lastName, address, phoneNumber, email, affiliations) VALUES ('$specialty', '$firstname', '$lastname' , '$daddress', '$dphone', '$demail', '$hospitalname')";
+          $r = @mysqli_query($dbc, $q);
+        }
+
 
         $q = "SELECT COUNT(patient_id) FROM PATIENT where firstName = '$first_name' and lastName = '$last_name' and address = '$address'";
         $r = @mysqli_query($dbc, $q);
@@ -136,16 +151,7 @@
               //  $q = "INSERT INTO INSURANCE (name) VALUES ('$coverage')";
                 //$r = @mysqli_query($dbc, $q);
 
-                if(isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['hospitalname']) && isset($_POST['specialty']) && isset($_POST['dPNum']) && isset($_POST['demail']) && isset($_POST['daddress'])){
-                  $firstname = $_POST['firstname'];
-                  $lastname = $_POST['lastname'];
-                  $hospitalname = $_POST['hospitalname'];
-                  $specialty = $_POST['specialty'];
-                  $dphone = $_POST['dPNum'];
-                  $demail = $_POST['demail'];
-                  $daddress = $_POST['daddress'];
-                  $q = "INSERT INTO DOCTORS (firstname, lastname, affiliatons, address, specialty, email, phonenumber) VALUES ('$firstname', '$lastname', '$hospitalname', '$daddress', '$specialty', '$demail', '$dphone')";
-                }
+
 
 
                 // go back to home page
@@ -159,26 +165,32 @@
                 // go to doctor form
 
                 echo '<form action="addClient.php" method="post">';
-                echo '<label>First Name</label><input type="text" name="dFirstName"><br>';
-                $dFirst = mysqli_real_escape_string($dbc, trim($_POST['dFirstName']));
-                echo '<label>Last Name</label><input type="text" name="dLastName"><br>';
-                $dFirst = mysqli_real_escape_string($dbc, trim($_POST['dLastName']));
+                echo '<label>First Name</label><input type="text" name="firstname"><br>';
+                //$dFirst =
+                echo '<label>Last Name</label><input type="text" name="lastname"><br>';
+                //$dFirst =
                 echo '<label>Specialty</label><input type="text" name="specialty" required><br>';
                 echo '<label>Phone Number</label><input type="numbernumber" name = "dPNum" pattern="\d*" minLength="10" maxlength="10" required><br>';
                 echo '<label>Email</label><input type="email" name="demail" required><br>';
                 echo '<label>Address</label><input type="text" name="daddress" required><br>';
 
                 echo '<select name="hospitalname">';
-                  $q = "SELECT * FROM HOSPITAL";
+                  $q = "SELECT hospital_id, name FROM HOSPITAL";
                   $r = @mysqli_query($dbc, $q);
                   $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-                  foreach($r as $results){
-                    echo '<option value='. $results['name'] . '>' . $results['name'] . '</option>';
+                  $arraylength = sizeof($row);
+                  for($x = -1; $x < $arraylength; $x++){
+                    foreach($r as $results){
+                      echo '<option value='. $row[$x] . '>' . $results['name'] . '</option>';
+                    }
+
                   }
                 echo '</select>';
                 echo '<input type="submit" name="submit" id="submit">';
                 echo '</form>';
+
+
 
               }
 

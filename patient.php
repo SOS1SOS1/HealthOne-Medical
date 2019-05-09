@@ -19,34 +19,30 @@
 
 <?php
 
-    function createForm($r) {
-      echo '<form action = "patient.php?id=' .  $id . '" method = "post">';
-      echo '<h3>Drug Name: ';
-      echo '<select name="drug">';
-          foreach($r as $results) {
-              echo '<option value = ' . $results['name'] . '>' . $results['name'] . '</option>';
-          }
-      echo '</select></h3>';
-      echo '<h3>Description: <input type = "text" name = "desc" size = "30" maxlength="100"></h3>';
-      echo '<h3>Start Date: <input type = "date" name = "startDate" value = "2019-01-01"></h3>';
-      echo '<h3>End Date: <input type = "date" name = "endDate" value = "2019-01-01"></h3>';
-      echo '<h3>Dosage: <input type="text" name = "dosage" maxlength="25"></h3>';
-      echo '<h3>Duration: <input type = "text" name = "duration" size = "25" maxlength="30"></h3>';
-      echo '<h3>Size: <input type="number" name = "size" pattern="\d*" minLength="1" maxlength="5"></h3>';
-      echo '<h3>Number of Refills: <input type="text" name = "refills" pattern="\d*" minLength="1" maxlength="5"></h3>';
+    function createAddForm($r_patient, $r_doctor, $patient_id) {
+        echo '<form action = "patient.php?id=' .  $patient_id . '" method = "post">';
+        echo '<h3>Drug Name: ';
+        echo '<select name="drug">';
+            foreach($r_patient as $results) {
+                echo '<option value = ' . $results['name'] . '>' . $results['name'] . '</option>';
+            }
+        echo '</select></h3>';
+        echo '<h3>Description: <input type = "text" name = "desc" size = "30" maxlength="100"></h3>';
+        echo '<h3>Start Date: <input type = "date" name = "startDate" value = "2019-01-01"></h3>';
+        echo '<h3>End Date: <input type = "date" name = "endDate" value = "2019-01-01"></h3>';
+        echo '<h3>Dosage: <input type="text" name = "dosage" maxlength="25"></h3>';
+        echo '<h3>Duration: <input type = "text" name = "duration" size = "25" maxlength="30"></h3>';
+        echo '<h3>Size: <input type="number" name = "size" pattern="\d*" minLength="1" maxlength="5"></h3>';
+        echo '<h3>Number of Refills: <input type="text" name = "refills" pattern="\d*" minLength="1" maxlength="5"></h3>';
+        echo '<h3>Prescribed by: ';
+        echo '<select name="doctor">';
+            foreach($r_doctor as $results) {
+                echo '<option value = ' . $results['doctor_id'] . '>' . $results['firstName'] . ' ' . $results['lastName'] . '</option>';
+            }
+        echo '</select></h3>';
 
-      echo '<h3><input id = "submit" type = "submit" name = "submit" value = "Add Drug"></h3>';
-      if (isset($_GET['id_doc']) && is_numeric($_GET['id_doc'])) {
-          $doc_id = $_GET['id_doc'];
-      }
-      echo '<input type="hidden" name="docID" value= ' . $doc_id . '">';
-      if (isset($_GET['id_pat']) && is_numeric($_GET['id_pat'])) {
-          $pat_id = $_GET['id_pat'];
-      }
-      echo '<input type="hidden" name="patID" value= ' . $pat_id . '">';
-
-      echo '<h3><input id = "submit" type = "submit" name = "submit" value = "Add Drug"></h3>';
-      echo '</form>';
+        echo '<h3><input id = "submit" type = "submit" name = "submit" value = "Add Drug"></h3>';
+        echo '</form>';
     }
 
     # checks that there is an id and that it is a number
@@ -55,6 +51,10 @@
     }
     if (isset($_GET['add']) && is_numeric($_GET['add'])) {
         $addPrescription = true;
+        $GLOBALS['a'] = "dsjklf";
+        echo $a;
+    } else {
+        $addPrescription = false;
     }
 
     require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
@@ -63,7 +63,20 @@
     $r = mysqli_query($dbc,$q);
     $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-    echo '<h2>' . $results['lastName'] . ", " . $results['firstName'] . "</h2>";
+    echo '<h2>' . $results['firstName'] . ' ' . $results['lastName'];
+    if ($edit == true) {
+        // shows edit form
+    } else {
+        echo '<a href="edit.php?id=' . $id . '&edit=1"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
+    }
+    //echo '<a href="patient.php?id=' . $id . '&edit=1"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
+    if ($delete == true) {
+        // shows delete form
+
+    } else {
+        echo '<a href="delete.php?id=' . $id . '&delete=1"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a></h2>';
+    }
+    //echo '<a href="patient.php?id=' . $id . '&delete=1"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a></h2>';
     echo '<p> Address: ' . $results['address'] . '</p>';
     echo '<p> Phone Number: ' . $results['phoneNumber'] . '</p>';
     echo '<p> Email: ' . $results['email'] . '</p>';
@@ -107,10 +120,12 @@
     }
     echo '</ul>';
 
-    if ($addPrescription == 1) {
+    if ($addPrescription == true) {
         $q = "SELECT * FROM DRUG";
-        $r = @mysqli_query($dbc, $q);
-        createForm($r);
+        $r_drug = @mysqli_query($dbc, $q);
+        $q = "SELECT * FROM DOCTOR";
+        $r_doc = @mysqli_query($dbc, $q);
+        createAddForm($r_drug, $r_doc, $id);
     } else {
         echo '<a href="patient.php?id=' . $id . '&add=1">Add New Prescription</a><br><br>';
     }
@@ -177,32 +192,23 @@
             $refills = mysqli_real_escape_string($dbc, trim($_POST['refills']));
         }
 
-        // checks for patient's id
-        if (empty($_POST['docID'])) {
-            $errors[] = 'Couldn\'t find doctor\'s id.';
+        // checks for a drug name
+        if (empty($_POST['doctor'])) {
+            $errors[] = 'You forgot to enter the name of the doctor who prescribed the drug.';
         } else {
-            $id_doc = mysqli_real_escape_string($dbc, trim($_POST['docID']));
+            $id_doc = mysqli_real_escape_string($dbc, trim($_POST['doctor']));
         }
-
-        // checks for doctor's id
-      /*  if (empty($_POST['patID'])) {
-            $errors[] = 'Couldn\'t find patient\'s id.';
-        } else {
-          echo 'here';
-            $id_pat = mysqli_real_escape_string($dbc, trim($_POST['patID']));
-        }*/
 
         if (isset($_GET['id'])) {
             $id_pat = $_GET['id'];
         }
-
-        echo $id_pat;
 
         if (empty($errors)) {
             $q = "SELECT drug_id FROM DRUG where DRUG.name = '$drug'";
             $r = mysqli_query($dbc,$q);
             $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
             $drugID = $row['drug_id'];
+
             // if the drug exists
             if (mysqli_num_rows($r) == 1) {
                 // then it checks if the prescription already exists
@@ -214,11 +220,11 @@
                 // checks if there were no errors
                 if ($drugs == 0) {
                     // inserts the new patient
-                  //  $q = "INSERT INTO PRESCRIPTION (patient_id, doctor_id, drug_id, description, startDate, endDate, dosage, duration, size, numRefill) VALUES ('$id_pat', '$id_doc', '$drugID', '$desc', '$start_date',  '$end_date', '$dosage', '$duration', '$size', '$refills')";
-                  //  $r = @mysqli_query($dbc, $q);
+                    $q = "INSERT INTO PRESCRIPTION (patient_id, doctor_id, drug_id, description, startDate, endDate, dosage, duration, size, numRefill) VALUES ('$id_pat', '$id_doc', '$drugID', '$desc', '$start_date',  '$end_date', '$dosage', '$duration', '$size', '$refills')";
+                    $r = @mysqli_query($dbc, $q);
                 } else {
-                    echo '<p> The following error(s) occured:<br>';
-                    echo " - Prescription already exists.";
+                    //echo '<p> The following error(s) occured:<br>';
+                    //echo " - Prescription already exists.";
                 }
 
             } else {
