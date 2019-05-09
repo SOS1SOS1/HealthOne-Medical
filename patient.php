@@ -45,16 +45,39 @@
         echo '</form>';
     }
 
+    function createEditForm($row_patient, $row_doctor, $row_insurance) {
+        echo '<form action = "edit.php" method = "post">';
+            echo '<h3>First Name: <input type = "text" name = "fName" size = "15" maxlength="30" value="' . $row_patient['firstName'] . '"></h3>';
+            echo '<h3>Last Name: <input type = "text" name = "lName" size = "15" maxlength="30" value="' . $row_patient['lastName'] . '"></h3>';
+            echo '<h3>Address: <input type = "text" name = "address" size = "30" maxlength="50" value="' . $row_patient['address'] . '"></h3>';
+            echo '<h3>Phone Number: <input type="numbernumber" name = "pNum" pattern="\d*" minLength="10" maxlength="10" value="' . $row_patient['phoneNumber'] . '"></h3>';
+            echo '<h3>Email: <input type = "email" name = "email" size = "25" maxlength="30" value="' . $row_patient['email'] . '"></h3>';
+            echo '<h3>Primary Doctor: </h3>';
+            echo '<label>First Name - </label><input type = "text" name = "dFirstName" size = "15" maxlength="30" value="' . $row_doctor['primaryDoctor'] . '"></h3>';
+            echo '<label>Last Name - </label><input type = "text" name = "dLastName" size = "15" maxlength="30" value="' . $row_doctor['primaryDoctor'] . '"></h3>';
+            echo '<h3>Level of Coverage: ';
+            echo '<select name = "coverage" value="' . $row_insurance['primaryDoctor'] . '">';
+                echo '<option value = "Bronze">Bronze</option>';
+                echo '<option value = "Silver">Silver</option>';
+                echo '<option value = "Gold">Gold</option>';
+            echo '</select></h3>';
+            echo '<a href="home.php"> <input type="submit" name="submit" value="Update Client" id="submit"></a><br><br><br>';
+        echo '</form>';
+    }
+
     # checks that there is an id and that it is a number
     if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         $id = $_GET['id'];
     }
     if (isset($_GET['add']) && is_numeric($_GET['add'])) {
         $addPrescription = true;
-        $GLOBALS['a'] = "dsjklf";
-        echo $a;
     } else {
         $addPrescription = false;
+    }
+    if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
+        $editClient = true;
+    } else {
+        $editClient = false;
     }
 
     require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
@@ -67,7 +90,7 @@
     if ($edit == true) {
         // shows edit form
     } else {
-        echo '<a href="edit.php?id=' . $id . '&edit=1"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
+        echo '<a href="patient.php?id=' . $id . '&edit=1"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
     }
     //echo '<a href="patient.php?id=' . $id . '&edit=1"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
     if ($delete == true) {
@@ -128,6 +151,14 @@
         createAddForm($r_drug, $r_doc, $id);
     } else {
         echo '<a href="patient.php?id=' . $id . '&add=1">Add New Prescription</a><br><br>';
+    }
+
+    if ($editClient == true) {
+        // brings up edit client form
+        $q = "SELECT * FROM PATIENT";
+        $r_pat = @mysqli_query($dbc, $q);
+        $results = mysqli_fetch_array($r_pat, MYSQLI_ASSOC);
+        createEditForm($results);
     }
 
     # checks that the form was submitted

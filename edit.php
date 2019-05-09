@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title> Add Client </title>
+    <title> Edit Client </title>
     <link rel="stylesheet" href="main.css">
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
   </head>
@@ -27,33 +27,6 @@
     } else {  // no valid id, kill the script
         echo '<p> This page has been accessed in error. </p>';
         exit();
-    }
-
-    // always shows the form
-    $q = "SELECT * FROM PATIENT WHERE patient_id = $id";
-    $r = @mysqli_query($dbc, $q);
-    $row = mysqli_fetch_array($r, MYSQLI_NUM);
-
-    # checks for vaild user id, then shows the form
-    if (mysqli_num_rows($r) == 1) {
-        // creates form
-        echo '<form action = "addClient.php" method = "post">';
-            echo '<h3>First Name: <input type = "text" name = "fName" size = "15" maxlength="30" value="' . $row['firstName'] . '"></h3>';
-            echo '<h3>Last Name: <input type = "text" name = "lName" size = "15" maxlength="30" value="' . $row['lastName'] . '"></h3>';
-            echo '<h3>Address: <input type = "text" name = "address" size = "30" maxlength="50" value="' . $row['address'] . '"></h3>';
-            echo '<h3>Phone Number: <input type="numbernumber" name = "pNum" pattern="\d*" minLength="10" maxlength="10" value="' . $row['phoneNumber'] . '"></h3>';
-            echo '<h3>Email: <input type = "email" name = "email" size = "25" maxlength="30" value="' . $row['email'] . '"></h3>';
-            echo '<h3>Primary Doctor: </h3>';
-            echo '<label>First Name - </label><input type = "text" name = "dFirstName" size = "15" maxlength="30" value="' . $row['primaryDoctor'] . '"></h3>';
-            echo '<label>Last Name - </label><input type = "text" name = "dLastName" size = "15" maxlength="30" value="' . $row['primaryDoctor'] . '"></h3>';
-            echo '<h3>Level of Coverage: </h3>';
-            echo '<select name = "coverage" value="' . $row['primaryDoctor'] . '">';
-                echo '<option value = "Bronze">Bronze</option>';
-                echo '<option value = "Silver">Silver</option>';
-                echo '<option value = "Gold">Gold</option>';
-            echo '</select><br>';
-            echo '<a href="home.php"> <input type="submit" name="submit" value="Update Client" id="submit"></a>';
-        echo '</form>';
     }
 
     # requires that we are able to connect to the database using are hidden php file
@@ -121,99 +94,38 @@
             $coverage = mysqli_real_escape_string($dbc, trim($_POST['coverage']));
         }
 
+        if (empty($errors)) {
 
+            // gets the primary care doctors id
+            $q = "SELECT doctor_id FROM DOCTOR where firstName = '$dFirst' and lastName = '$dLast'";
+            $r = @mysqli_query($dbc, $q);
+            $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-        if(isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['hospitalname']) && isset($_POST['specialty']) && isset($_POST['dPNum']) && isset($_POST['demail']) && isset($_POST['daddress'])){
-          echo "help me";
-          $firstname = mysqli_real_escape_string($dbc, trim($_POST['firstname']));
-          $lastname = mysqli_real_escape_string($dbc, trim($_POST['lastname']));;
-          $hospitalname = mysqli_real_escape_string($dbc, trim($_POST['hospitalname']));
-          $specialty = $_POST['specialty'];
-          $dphone = $_POST['dPNum'];
-          $demail = $_POST['demail'];
-          $daddress = $_POST['daddress'];
+            // checks if that doctor exists
+            if (mysqli_num_rows($r) == 1) {
+              $doc = $row['doctor_id'];
 
-          //echo $firstname . $lastname . $hospitalname . $specialty .
-          $q = "INSERT INTO DOCTOR (specialty, firstName, lastName, address, phoneNumber, email, affiliations) VALUES ('$specialty', '$firstname', '$lastname' , '$daddress', '$dphone', '$demail', '$hospitalname')";
-          $r = @mysqli_query($dbc, $q);
-        }
+              // updates patient information
+              //$q = "UPDATE PATIENT SET firstName = '$first_name', lastName = '$last_name', address = '$address', phoneNumber = '$phone_number', email = '$email', primaryDoctor = '$doc' WHERE patient_id = $id";
+              //$r = @mysqli_query($dbc, $q);
 
+              // updates patient's insurance plan
+              //$q = "UPDATE INSURANCE SET name = '$coverage' WHERE insurance_id = $id";
+              //$r = @mysqli_query($dbc, $q);
 
-        $q = "SELECT COUNT(patient_id) FROM PATIENT where firstName = '$first_name' and lastName = '$last_name' and address = '$address'";
-        $r = @mysqli_query($dbc, $q);
-        $row = mysqli_fetch_array($r, MYSQLI_NUM);
-        $patients = $row[0];
+            } else {
 
-        // checks if there were no errors
-        if ($patients == 0) {
-          if (empty($errors)) {
+            }
 
-              // gets the primary care doctors id
-              $q = "SELECT doctor_id FROM DOCTOR where firstName = '$dFirst' and lastName = '$dLast'";
-              $r = @mysqli_query($dbc, $q);
-              $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
-
-              // checks if that doctor exists
-              if (mysqli_num_rows($r) == 1) {
-                $doc = $row['doctor_id'];
-
-                // inserts the new patient
-                //$q = "INSERT INTO PATIENT (firstName, lastName, address, phoneNumber, email, primaryDoctor) VALUES ('$first_name', '$last_name', '$address', '$phone_number', '$email',  $doc)";
-                //$r = @mysqli_query($dbc, $q);
-
-                // inserts patient's insurance plan
-              //  $q = "INSERT INTO INSURANCE (name) VALUES ('$coverage')";
-                //$r = @mysqli_query($dbc, $q);
-
-                // go back to home page
-
-
-              } else {
-                echo '<p> The following error(s) occured:<br>';
-                echo " - Doctor entered doesn't exist in table.";
-                echo '<p> Please enter the doctor\'s information </p>';
-
-                // go to doctor form
-
-                echo '<form action="addClient.php" method="post">';
-                echo '<label>First Name</label><input type="text" name="firstname"><br>';
-                //$dFirst =
-                echo '<label>Last Name</label><input type="text" name="lastname"><br>';
-                //$dFirst =
-                echo '<label>Specialty</label><input type="text" name="specialty" required><br>';
-                echo '<label>Phone Number</label><input type="numbernumber" name = "dPNum" pattern="\d*" minLength="10" maxlength="10" required><br>';
-                echo '<label>Email</label><input type="email" name="demail" required><br>';
-                echo '<label>Address</label><input type="text" name="daddress" required><br>';
-
-                echo '<select name="hospitalname">';
-                  $q = "SELECT count(hospital_id) FROM HOSPITAL";
-                  $r = @mysqli_query($dbc, $q);
-                  $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
-                  $hospital = $row[0];
-
-                  foreach($hospital as $results){
-                    echo '<option value='. $results['name'] . '>' . $results['name'] . '</option>';
-                  }
-                echo '</select>';
-                echo '<input type="submit" name="submit" id="submit">';
-                echo '</form>';
-
-              }
-
-          } else {
-
-              # reports the errors
-              echo '<p> The following error(s) occured:<br>';
-              foreach ($errors as $msg) {
-                  echo " - $msg<br>\n";
-              }
-              echo '</p><p> Please try again. </p>';
-
-            // end of errors if statement
-          }
         } else {
+
+            # reports the errors
             echo '<p> The following error(s) occured:<br>';
-            echo " - Patient already exists.";
+            foreach ($errors as $msg) {
+                echo " - $msg<br>\n";
+            }
+            echo '</p><p> Please try again. </p>';
+
         }
 
     }
