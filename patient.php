@@ -188,10 +188,15 @@
       /*  if (empty($_POST['patID'])) {
             $errors[] = 'Couldn\'t find patient\'s id.';
         } else {
+          echo 'here';
             $id_pat = mysqli_real_escape_string($dbc, trim($_POST['patID']));
         }*/
-        $id_pat = $id;
-        echo $id;
+
+        if (isset($_GET['id'])) {
+            $id_pat = $_GET['id'];
+        }
+
+        echo $id_pat;
 
         if (empty($errors)) {
             $q = "SELECT drug_id FROM DRUG where DRUG.name = '$drug'";

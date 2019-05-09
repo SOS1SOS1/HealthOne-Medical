@@ -115,8 +115,6 @@
         $row = mysqli_fetch_array($r, MYSQLI_NUM);
         $patients = $row[0];
 
-
-
         // checks if there were no errors
         if ($patients == 0) {
           if (empty($errors)) {
@@ -148,8 +146,6 @@
                   $daddress = $_POST['daddress'];
                   $q = "INSERT INTO DOCTORS (firstname, lastname, affiliatons, address, specialty, email, phonenumber) VALUES ('$firstname', '$lastname', '$hospitalname', '$daddress', '$specialty', '$demail', '$dphone')";
                 }
-
-          }
 
 
                 // go back to home page
@@ -184,9 +180,7 @@
                 echo '<input type="submit" name="submit" id="submit">';
                 echo '</form>';
 
-
-
-
+              }
 
           } else {
 
