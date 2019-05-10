@@ -219,6 +219,35 @@
               }
               echo '</ul>';
               echo '<a href="patient.php?id=' . $id . '&add=1">Add New Prescription</a><br><br>';
+
+              $q = "SELECT * FROM VISIT INNER JOIN PATIENT ON VISIT.patient_id = PATIENT.patient_id WHERE patient_id = $id";
+              $r = mysqli_query($dbc,$q);
+              $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+
+              echo '<p> Visit(s): </p>';
+              echo '<ul>';
+              foreach($r as $row) {
+                  echo '<li><strong>' . $row['type'] . '</strong> (<em>' . $row['date'] . '</em>)<ul>';
+                    if ($row['diagnosis'] != '') {
+                        echo '<li> Diagnosis - ' . $row['diagnosis'] . '</li>';
+                    }
+                    if ($row['status'] != '') {
+                        echo '<li> Status - ' . $row['status'] . '</li>';
+                    }
+                    if ($row['bloodPressure'] != '') {
+                        echo '<li> Blood Pressure - ' . $row['bloodPressure'] . '</li>';
+                    }
+                    if ($row['height'] != '') {
+                        echo '<li> Height - ' . $row['height'] . '</li>';
+                    }
+                    if ($row['Weight'] != '') {
+                        echo '<li> Weight - ' . $row['Weight'] . '</li>';
+                    }
+                  echo '</ul></li>';
+              }
+              echo '</ul>';
+              echo '<a href="patient.php?id=' . $id . '&new=1">Add New Visit</a><br><br>';
+
               echo "<a href='home.php'>Go Back</a>";
 
             }

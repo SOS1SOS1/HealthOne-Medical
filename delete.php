@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title> Edit Client </title>
+    <title> Delete Client </title>
     <link rel="stylesheet" href="main.css">
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
   </head>
   <body>
+
     <nav class="navmain">
       <div class="homeLogout">
         <?php  echo $_SESSION['user']; ?><br>
@@ -43,7 +44,7 @@
         // updates patient's insurance plan
         $q = "UPDATE INSURANCE SET name = '$coverage' WHERE insurance_id = $id";
         $r = @mysqli_query($dbc, $q);
-        
+
         mysqli_close($dbc);
 
         // redirects user back to client page
@@ -51,5 +52,5 @@
         echo "<script type='text/javascript'>window.top.location='$patient_page';</script>"; exit;
 
     }
-    
+
 ?>
