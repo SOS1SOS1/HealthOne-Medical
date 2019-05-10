@@ -19,11 +19,11 @@
 
 <?php
 
-    function createAddForm($r_patient, $r_doctor, $patient_id) {
+    function createAddForm($r_drug, $r_doctor, $patient_id) {
         echo '<form action = "patient.php?id=' .  $patient_id . '" method = "post">';
         echo '<h3>Drug Name: ';
         echo '<select name="drug">';
-            foreach($r_patient as $results) {
+            foreach($r_drug as $results) {
                 echo '<option value = ' . $results['name'] . '>' . $results['name'] . '</option>';
             }
         echo '</select></h3>';
@@ -43,26 +43,47 @@
 
         echo '<h3><input id = "submit" type = "submit" name = "submit" value = "Add Drug"></h3>';
         echo '</form>';
+        echo '<a href="patient.php?id=' . $patient_id . '">Cancel</a>';
     }
 
-    function createEditForm($row_patient, $row_doctor, $row_insurance) {
-        echo '<form action = "edit.php" method = "post">';
+    function createEditForm($row_patient, $r_doctor, $row_insurance, $primary_doc) {
+        echo '<form action = "edit.php?id=' . $row_patient['patient_id'] . '" method = "post">';
             echo '<h3>First Name: <input type = "text" name = "fName" size = "15" maxlength="30" value="' . $row_patient['firstName'] . '"></h3>';
             echo '<h3>Last Name: <input type = "text" name = "lName" size = "15" maxlength="30" value="' . $row_patient['lastName'] . '"></h3>';
             echo '<h3>Address: <input type = "text" name = "address" size = "30" maxlength="50" value="' . $row_patient['address'] . '"></h3>';
             echo '<h3>Phone Number: <input type="numbernumber" name = "pNum" pattern="\d*" minLength="10" maxlength="10" value="' . $row_patient['phoneNumber'] . '"></h3>';
             echo '<h3>Email: <input type = "email" name = "email" size = "25" maxlength="30" value="' . $row_patient['email'] . '"></h3>';
-            echo '<h3>Primary Doctor: </h3>';
-            echo '<label>First Name - </label><input type = "text" name = "dFirstName" size = "15" maxlength="30" value="' . $row_doctor['primaryDoctor'] . '"></h3>';
-            echo '<label>Last Name - </label><input type = "text" name = "dLastName" size = "15" maxlength="30" value="' . $row_doctor['primaryDoctor'] . '"></h3>';
-            echo '<h3>Level of Coverage: ';
-            echo '<select name = "coverage" value="' . $row_insurance['primaryDoctor'] . '">';
-                echo '<option value = "Bronze">Bronze</option>';
-                echo '<option value = "Silver">Silver</option>';
-                echo '<option value = "Gold">Gold</option>';
+            echo '<h3>Primary Doctor: ';
+            echo '<select name="doctor">';
+                foreach($r_doctor as $results) {
+                    if ($primary_doc['doctor_id'] == $results['doctor_id']) {
+                        echo '<option selected = "selected" value = ' . $results['doctor_id'] . '>' . $results['firstName'] . ' ' . $results['lastName'] . '</option>';
+                    } else {
+                        echo '<option value = ' . $results['doctor_id'] . '>' . $results['firstName'] . ' ' . $results['lastName'] . '</option>';
+                    }
+                }
             echo '</select></h3>';
-            echo '<a href="home.php"> <input type="submit" name="submit" value="Update Client" id="submit"></a><br><br><br>';
+            echo '<h3>Level of Coverage: ';
+            echo '<select name = "coverage" value="' . $row_insurance['name'] . '">';
+                if ($row_insurance['name'] == "Bronze") {
+                   echo '<option value = "Bronze" selected="selected">Bronze</option>';
+                } else {
+                  echo '<option value = "Bronze">Bronze</option>';
+                }
+                if ($row_insurance['name'] == "Silver") {
+                   echo '<option value = "Silver" selected="selected">Silver</option>';
+                } else {
+                  echo '<option value = "Silver">Silver</option>';
+                }
+                if ($row_insurance['name'] == "Gold") {
+                   echo '<option value = "Gold" selected="selected">Gold</option>';
+                } else {
+                  echo '<option value = "Gold">Gold</option>';
+                }
+            echo '</select></h3>';
+            echo '<a href="home.php"> <input type="submit" name="submit" value="Update Client" id="submit"></a><br><br>';
         echo '</form>';
+        echo '<a href="patient.php?id=' . $row_patient['patient_id'] . '">Cancel</a>';
     }
 
     # checks that there is an id and that it is a number
@@ -82,83 +103,100 @@
 
     require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
 
-    $q = "SELECT * FROM PATIENT where patient_id = $id";
-    $r = mysqli_query($dbc,$q);
-    $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
-
-    echo '<h2>' . $results['firstName'] . ' ' . $results['lastName'];
-    if ($edit == true) {
-        // shows edit form
-    } else {
-        echo '<a href="patient.php?id=' . $id . '&edit=1"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
-    }
-    //echo '<a href="patient.php?id=' . $id . '&edit=1"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
-    if ($delete == true) {
-        // shows delete form
-
-    } else {
-        echo '<a href="delete.php?id=' . $id . '&delete=1"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a></h2>';
-    }
-    //echo '<a href="patient.php?id=' . $id . '&delete=1"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a></h2>';
-    echo '<p> Address: ' . $results['address'] . '</p>';
-    echo '<p> Phone Number: ' . $results['phoneNumber'] . '</p>';
-    echo '<p> Email: ' . $results['email'] . '</p>';
-
-    $docID = $results['primaryDoctor'];
-
-    $q = "SELECT INSURANCE.name FROM INSURANCE INNER JOIN PATIENT ON patient_id = insurance_id WHERE patient_id = $id";
-    $r = mysqli_query($dbc,$q);
-    $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
-
-    echo '<p> Level of Coverage: ' . $results['name'] . '</p>';
-
-    $q = "SELECT DOCTOR.firstName, DOCTOR.lastName FROM DOCTOR where doctor_id = $docID";
-    $r = mysqli_query($dbc,$q);
-    $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
-
-    echo '<p> Primary Care Doctor: ' . '<a href="doctor.php?id_pat=' . $id . '&id_doc=' . $docID .'">' . $results['firstName'] . " " . $results['lastName'] . '</a></p>';
-
-    $q = "SELECT * FROM DRUG INNER JOIN PRESCRIPTION ON PRESCRIPTION.drug_id = DRUG.drug_id WHERE patient_id = $id";
-    $r = mysqli_query($dbc,$q);
-    $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
-
-    echo '<p> Prescription(s): </p>';
-    echo '<ul>';
-    foreach($r as $row) {
-        echo '<li><strong>' . $row['name'] . '</strong> (<em>' . $row['description'] . '</em>)<ul>';
-          echo '<li> Purpose - ' . $row['purpose'] . '</li>';
-          echo '<li> Possible Side Effects - ' . $row['sideEffects'] . '</li>';
-          echo '<li> Start Date: ' . $row['startDate'] . '</li>';
-          echo '<li> End Date: ' . $row['endDate'] . '</li>';
-          echo '<li> Dosage - ' . $row['dosage'] . '</li>';
-          echo '<li> Duration - ' . $row['duration'] . '</li>';
-          echo '<li> Size - ' . $row['size'] . '</li>';
-          echo '<li> Number of Refills - ' . $row['numRefill'] . '</li>';
-
-          $q = "SELECT DOCTOR.firstName, DOCTOR.lastName FROM DOCTOR where doctor_id = $docID";
-          $r2 = mysqli_query($dbc,$q);
-          $results = mysqli_fetch_array($r2, MYSQLI_ASSOC);
-          echo '<li> Prescribed by - ' . $results['firstName'] . ' ' . $results['lastName'] . '</li>';
-        echo '</ul></li>';
-    }
-    echo '</ul>';
-
     if ($addPrescription == true) {
+
         $q = "SELECT * FROM DRUG";
         $r_drug = @mysqli_query($dbc, $q);
         $q = "SELECT * FROM DOCTOR";
         $r_doc = @mysqli_query($dbc, $q);
         createAddForm($r_drug, $r_doc, $id);
-    } else {
-        echo '<a href="patient.php?id=' . $id . '&add=1">Add New Prescription</a><br><br>';
-    }
 
-    if ($editClient == true) {
+    } else {
+
         // brings up edit client form
-        $q = "SELECT * FROM PATIENT";
-        $r_pat = @mysqli_query($dbc, $q);
-        $results = mysqli_fetch_array($r_pat, MYSQLI_ASSOC);
-        createEditForm($results);
+        if ($editClient == true) {
+
+            // gets client information
+            $q = "SELECT * FROM PATIENT WHERE patient_id = $id";
+            $r_pat = @mysqli_query($dbc, $q);
+            $row_patient = mysqli_fetch_array($r_pat, MYSQLI_ASSOC);
+
+            // gets primary doctor id from client row
+            $primary_doc_id = $row_patient['primaryDoctor'];
+            // gets primary doctor first and last name
+            $q = "SELECT * FROM DOCTOR WHERE doctor_id = $primary_doc_id";
+            $r_primary_doc = @mysqli_query($dbc, $q);
+            $primary_doc = mysqli_fetch_array($r_primary_doc, MYSQLI_ASSOC);
+
+            // gets all doctors
+            $q = "SELECT * FROM DOCTOR";
+            $r_doc = @mysqli_query($dbc, $q);
+
+            // sets coverage id to client id
+            $coverage_id = $id;
+            $q = "SELECT * FROM INSURANCE WHERE insurance_id = $coverage_id";
+            $r_insur = @mysqli_query($dbc, $q);
+            $row_insurance = mysqli_fetch_array($r_insur, MYSQLI_ASSOC);
+            createEditForm($row_patient, $r_doc, $row_insurance, $primary_doc);
+
+        } else {
+
+            // gets client information
+            $q = "SELECT * FROM PATIENT where patient_id = $id";
+            $r = mysqli_query($dbc,$q);
+            $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+            $docID = $results['primaryDoctor'];
+
+            echo '<h2>' . $results['firstName'] . ' ' . $results['lastName'];
+            echo '<a href="patient.php?id=' . $id . '&edit=1"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
+            echo '<a href="delete.php?id=' . $id . '&delete=1"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a></h2>';
+
+            echo '<p> Address: ' . $results['address'] . '</p>';
+            echo '<p> Phone Number: ' . $results['phoneNumber'] . '</p>';
+            echo '<p> Email: ' . $results['email'] . '</p>';
+
+            $q = "SELECT INSURANCE.name FROM INSURANCE INNER JOIN PATIENT ON patient_id = insurance_id WHERE patient_id = $id";
+            $r = mysqli_query($dbc,$q);
+            $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+
+            echo '<p> Level of Coverage: ' . $results['name'] . '</p>';
+
+            $q = "SELECT DOCTOR.firstName, DOCTOR.lastName FROM DOCTOR where doctor_id = $docID";
+            $r = mysqli_query($dbc,$q);
+            $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+
+            echo '<p> Primary Care Doctor: ' . '<a href="doctor.php?id_pat=' . $id . '&id_doc=' . $docID .'">' . $results['firstName'] . " " . $results['lastName'] . '</a></p>';
+
+            $q = "SELECT * FROM DRUG INNER JOIN PRESCRIPTION ON PRESCRIPTION.drug_id = DRUG.drug_id WHERE patient_id = $id";
+            $r = mysqli_query($dbc,$q);
+            $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+
+            echo '<p> Prescription(s): </p>';
+            echo '<ul>';
+            foreach($r as $row) {
+                echo '<li><strong>' . $row['name'] . '</strong> (<em>' . $row['description'] . '</em>)<ul>';
+                  echo '<li> Purpose - ' . $row['purpose'] . '</li>';
+                  echo '<li> Possible Side Effects - ' . $row['sideEffects'] . '</li>';
+                  echo '<li> Start Date: ' . $row['startDate'] . '</li>';
+                  echo '<li> End Date: ' . $row['endDate'] . '</li>';
+                  echo '<li> Dosage - ' . $row['dosage'] . '</li>';
+                  echo '<li> Duration - ' . $row['duration'] . '</li>';
+                  echo '<li> Size - ' . $row['size'] . '</li>';
+                  echo '<li> Number of Refills - ' . $row['numRefill'] . '</li>';
+
+                  $prescription_doctor = $row['doctor_id'];
+                  $q = "SELECT DOCTOR.firstName, DOCTOR.lastName FROM DOCTOR where doctor_id = '$prescription_doctor'";
+                  $r2 = mysqli_query($dbc,$q);
+                  $results = mysqli_fetch_array($r2, MYSQLI_ASSOC);
+                  echo '<li> Prescribed by - ' . $results['firstName'] . ' ' . $results['lastName'] . '</li>';
+                echo '</ul></li>';
+            }
+            echo '</ul>';
+            echo '<a href="patient.php?id=' . $id . '&add=1">Add New Prescription</a><br><br>';
+            echo "<a href='home.php'>Go Back</a>";
+
+        }
+
     }
 
     # checks that the form was submitted
@@ -228,6 +266,7 @@
             $errors[] = 'You forgot to enter the name of the doctor who prescribed the drug.';
         } else {
             $id_doc = mysqli_real_escape_string($dbc, trim($_POST['doctor']));
+            echo $id_doc;
         }
 
         if (isset($_GET['id'])) {
@@ -251,8 +290,8 @@
                 // checks if there were no errors
                 if ($drugs == 0) {
                     // inserts the new patient
-                    $q = "INSERT INTO PRESCRIPTION (patient_id, doctor_id, drug_id, description, startDate, endDate, dosage, duration, size, numRefill) VALUES ('$id_pat', '$id_doc', '$drugID', '$desc', '$start_date',  '$end_date', '$dosage', '$duration', '$size', '$refills')";
-                    $r = @mysqli_query($dbc, $q);
+                    //$q = "INSERT INTO PRESCRIPTION (patient_id, doctor_id, drug_id, description, startDate, endDate, dosage, duration, size, numRefill) VALUES ('$id_pat', '$id_doc', '$drugID', '$desc', '$start_date',  '$end_date', '$dosage', '$duration', '$size', '$refills')";
+                    //$r = @mysqli_query($dbc, $q);
                 } else {
                     //echo '<p> The following error(s) occured:<br>';
                     //echo " - Prescription already exists.";
@@ -274,6 +313,5 @@
 
     }
 
-    echo "<a href='home.php'>Go Back</a>";
     include("footer.html");
  ?>

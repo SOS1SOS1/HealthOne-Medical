@@ -19,6 +19,7 @@
 </html>
 
 <?php
+
     # checks that there is an id and that it is a number
     if (isset($_GET['id']) && is_numeric($_GET['id'])) {  // from table.php
         $id = $_GET['id'];
@@ -73,18 +74,11 @@
             $email = mysqli_real_escape_string($dbc, trim($_POST['email']));
         }
 
-        // checks for a primary care doctor first name
-        if (empty($_POST['dFirstName'])) {
-            $errors[] = 'You forgot to enter the client\'s primary care doctor\'s first name.';
+        // checks for a primary care doctor
+        if (empty($_POST['doctor'])) {
+            $errors[] = 'You forgot to enter the client\'s level of insurance coverage.';
         } else {
-            $dFirst = mysqli_real_escape_string($dbc, trim($_POST['dFirstName']));
-        }
-
-        // checks for a primary care doctor first name
-        if (empty($_POST['dLastName'])) {
-            $errors[] = 'You forgot to enter the client\'s primary care doctor\'s last name.';
-        } else {
-            $dLast = mysqli_real_escape_string($dbc, trim($_POST['dLastName']));
+            $docID = mysqli_real_escape_string($dbc, trim($_POST['doctor']));
         }
 
         // checks for the level of coverage
@@ -96,26 +90,13 @@
 
         if (empty($errors)) {
 
-            // gets the primary care doctors id
-            $q = "SELECT doctor_id FROM DOCTOR where firstName = '$dFirst' and lastName = '$dLast'";
+            // updates patient information
+            $q = "UPDATE PATIENT SET firstName = '$first_name', lastName = '$last_name', address = '$address', phoneNumber = '$phone_number', email = '$email', primaryDoctor = '$docID' WHERE patient_id = $id";
             $r = @mysqli_query($dbc, $q);
-            $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-            // checks if that doctor exists
-            if (mysqli_num_rows($r) == 1) {
-              $doc = $row['doctor_id'];
-
-              // updates patient information
-              //$q = "UPDATE PATIENT SET firstName = '$first_name', lastName = '$last_name', address = '$address', phoneNumber = '$phone_number', email = '$email', primaryDoctor = '$doc' WHERE patient_id = $id";
-              //$r = @mysqli_query($dbc, $q);
-
-              // updates patient's insurance plan
-              //$q = "UPDATE INSURANCE SET name = '$coverage' WHERE insurance_id = $id";
-              //$r = @mysqli_query($dbc, $q);
-
-            } else {
-
-            }
+            // updates patient's insurance plan
+            $q = "UPDATE INSURANCE SET name = '$coverage' WHERE insurance_id = $id";
+            $r = @mysqli_query($dbc, $q);
 
         } else {
 
@@ -128,9 +109,11 @@
 
         }
 
-    }
+        // redirects user back to client page
+        $patient_page = "http://shantim.smtchs.org/HealthOne_Medical/patient.php?id=" . $id;
+        echo "<script type='text/javascript'>window.top.location='$patient_page';</script>"; exit;
 
-    echo "<a href='home.php'>Go Back</a>";
+    }
 
     mysqli_close($dbc);
     include("footer.html");
