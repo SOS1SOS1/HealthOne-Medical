@@ -24,6 +24,12 @@
         <?php  echo $_SESSION['user']; ?><br>
         <a href="logout.php"> Logout</a><br>
         <a href="addClient.php"> New Client </a>
+
+        <form action = "home.php" method = "post">
+            <input type = "text" size = "20" name = "patient" placeholder = "Name">
+            <input type = "submit" name = "search" value = "Search" id ="submit" style = "padding: 10px;">
+        </form>
+
       </div>
       <a href="home.php"><h1>HealthOne Medical</h1></a>
       <a href="testingtingz.php">click for tests</a>

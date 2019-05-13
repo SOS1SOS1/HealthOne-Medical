@@ -96,6 +96,36 @@
         echo '<a href="patient.php?id=' . $patient['patient_id'] . '">Cancel</a>';
     }
 
+    function createNewVisitForm($r_doctor, $patient_id) {
+        echo '<form action = "addVisit.php?id=' .  $patient_id . '" method = "post">';
+        echo '<h3>Date: <input type = "date" name = "visitDate" value = "2019-01-01"></h3>';
+
+        echo '<h3>Type of Visit: ';
+        echo '<select name="type">';
+            echo '<option value = "New Issue">New Issue</option>';
+            echo '<option value = "Follow-Up">Follow-Up</option>';
+            echo '<option value = "Checkup">Checkup</option>';
+        echo '</select></h3>';
+
+        echo '<h3>Doctor: ';
+        echo '<select name="doctor">';
+            foreach($r_doctor as $results) {
+                echo '<option value = ' . $results['doctor_id'] . '>' . $results['firstName'] . ' ' . $results['lastName'] . '</option>';
+            }
+        echo '</select></h3>';
+
+        echo '<h3>Status: <input type = "text" name = "status" size = "30" maxlength="50"></h3>';
+        echo '<h3>Diagnosis: <input type="text" name = "diagnosis" size = 30; maxlength="75"></h3>';
+
+        echo '<h3>Current Blood Pressure: <input type = "text" name = "bloodPressure" size = "10" maxlength="20"></h3>';
+        echo '<h3>Height: <input type="text" name = "height" size = 10; maxlength="15"></h3>';
+        echo '<h3>Weight: <input type="text" name = "weight" size = 10; maxlength="15"></h3>';
+
+        echo '<h3><input id = "submit" type = "submit" name = "submit" value = "Add Visit"></h3>';
+        echo '</form>';
+        echo '<a href="patient.php?id=' . $patient_id . '">Cancel</a>';
+    }
+
     # checks that there is an id and that it is a number
     if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         $id = $_GET['id'];
@@ -114,6 +144,11 @@
         $deleteClient = true;
     } else {
         $deleteClient = false;
+    }
+    if (isset($_GET['new']) && is_numeric($_GET['new'])) {
+        $newVisit = true;
+    } else {
+        $newVisit = false;
     }
 
     require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
@@ -167,93 +202,104 @@
 
             } else {
 
-              // gets client information
-              $q = "SELECT * FROM PATIENT where patient_id = $id";
-              $r = mysqli_query($dbc,$q);
-              $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
-              $docID = $results['primaryDoctor'];
+                if ($newVisit == true) {
 
-              echo '<h2>' . $results['firstName'] . ' ' . $results['lastName'];
-              echo '<a href="patient.php?id=' . $id . '&edit=1"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
-              echo '<a href="patient.php?id=' . $id . '&delete=1"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a></h2>';
+                    // gets all doctors
+                    $q = "SELECT * FROM DOCTOR";
+                    $r_doc = @mysqli_query($dbc, $q);
 
-              echo '<p> Address: ' . $results['address'] . '</p>';
-              echo '<p> Phone Number: ' . $results['phoneNumber'] . '</p>';
-              echo '<p> Email: ' . $results['email'] . '</p>';
+                    createNewVisitForm($r_doc, $id);
 
-              $q = "SELECT INSURANCE.name FROM INSURANCE INNER JOIN PATIENT ON patient_id = insurance_id WHERE patient_id = $id";
-              $r = mysqli_query($dbc,$q);
-              $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+                } else {
 
-              echo '<p> Level of Coverage: ' . $results['name'] . '</p>';
+                    // gets client information
+                    $q = "SELECT * FROM PATIENT where patient_id = $id";
+                    $r = mysqli_query($dbc,$q);
+                    $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+                    $docID = $results['primaryDoctor'];
 
-              $q = "SELECT DOCTOR.firstName, DOCTOR.lastName FROM DOCTOR where doctor_id = $docID";
-              $r = mysqli_query($dbc,$q);
-              $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+                    echo '<h2>' . $results['firstName'] . ' ' . $results['lastName'];
+                    echo '<a href="patient.php?id=' . $id . '&edit=1"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
+                    echo '<a href="patient.php?id=' . $id . '&delete=1"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a></h2>';
 
-              echo '<p> Primary Care Doctor: ' . '<a href="doctor.php?id_pat=' . $id . '&id_doc=' . $docID .'">' . $results['firstName'] . " " . $results['lastName'] . '</a></p>';
+                    echo '<p> Address: ' . $results['address'] . '</p>';
+                    echo '<p> Phone Number: ' . $results['phoneNumber'] . '</p>';
+                    echo '<p> Email: ' . $results['email'] . '</p>';
 
-              $q = "SELECT * FROM DRUG INNER JOIN PRESCRIPTION ON PRESCRIPTION.drug_id = DRUG.drug_id WHERE patient_id = $id";
-              $r = mysqli_query($dbc,$q);
-              $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+                    $q = "SELECT INSURANCE.name FROM INSURANCE INNER JOIN PATIENT ON patient_id = insurance_id WHERE patient_id = $id";
+                    $r = mysqli_query($dbc,$q);
+                    $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-              echo '<p> Prescription(s): </p>';
-              echo '<ul>';
-              foreach($r as $row) {
-                  echo '<li><strong>' . $row['name'] . '</strong> (<em>' . $row['description'] . '</em>)<ul>';
-                    echo '<li> Purpose - ' . $row['purpose'] . '</li>';
-                    echo '<li> Possible Side Effects - ' . $row['sideEffects'] . '</li>';
-                    echo '<li> Start Date: ' . $row['startDate'] . '</li>';
-                    echo '<li> End Date: ' . $row['endDate'] . '</li>';
-                    echo '<li> Dosage - ' . $row['dosage'] . '</li>';
-                    echo '<li> Duration - ' . $row['duration'] . '</li>';
-                    echo '<li> Size - ' . $row['size'] . '</li>';
-                    echo '<li> Number of Refills - ' . $row['numRefill'] . '</li>';
+                    echo '<p> Level of Coverage: ' . $results['name'] . '</p>';
 
-                    $prescription_doctor = $row['doctor_id'];
-                    $q = "SELECT DOCTOR.firstName, DOCTOR.lastName FROM DOCTOR where doctor_id = '$prescription_doctor'";
-                    $r2 = mysqli_query($dbc,$q);
-                    $results = mysqli_fetch_array($r2, MYSQLI_ASSOC);
-                    echo '<li> Prescribed by - ' . $results['firstName'] . ' ' . $results['lastName'] . '</li>';
-                  echo '</ul></li>';
-              }
-              echo '</ul>';
-              echo '<a href="patient.php?id=' . $id . '&add=1">Add New Prescription</a><br><br>';
+                    $q = "SELECT DOCTOR.firstName, DOCTOR.lastName FROM DOCTOR where doctor_id = $docID";
+                    $r = mysqli_query($dbc,$q);
+                    $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-              $q = "SELECT * FROM VISIT INNER JOIN PATIENT ON VISIT.patient_id = PATIENT.patient_id WHERE patient_id = $id";
-              $r = mysqli_query($dbc,$q);
-              $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+                    echo '<p> Primary Care Doctor: ' . '<a href="doctor.php?id_pat=' . $id . '&id_doc=' . $docID .'">' . $results['firstName'] . " " . $results['lastName'] . '</a></p>';
 
-              echo '<p> Visit(s): </p>';
-              echo '<ul>';
-              foreach($r as $row) {
-                  echo '<li><strong>' . $row['type'] . '</strong> (<em>' . $row['date'] . '</em>)<ul>';
-                    if ($row['diagnosis'] != '') {
-                        echo '<li> Diagnosis - ' . $row['diagnosis'] . '</li>';
+                    $q = "SELECT * FROM DRUG INNER JOIN PRESCRIPTION ON PRESCRIPTION.drug_id = DRUG.drug_id WHERE patient_id = $id";
+                    $r = mysqli_query($dbc,$q);
+                    $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+
+                    echo '<p> Prescription(s): </p>';
+                    echo '<ul>';
+                    foreach($r as $row) {
+                        echo '<li><strong>' . $row['name'] . '</strong> (<em>' . $row['description'] . '</em>)<ul>';
+                          echo '<li> Purpose - ' . $row['purpose'] . '</li>';
+                          echo '<li> Possible Side Effects - ' . $row['sideEffects'] . '</li>';
+                          echo '<li> Start Date: ' . $row['startDate'] . '</li>';
+                          echo '<li> End Date: ' . $row['endDate'] . '</li>';
+                          echo '<li> Dosage - ' . $row['dosage'] . '</li>';
+                          echo '<li> Duration - ' . $row['duration'] . '</li>';
+                          echo '<li> Size - ' . $row['size'] . '</li>';
+                          echo '<li> Number of Refills - ' . $row['numRefill'] . '</li>';
+
+                          $prescription_doctor = $row['doctor_id'];
+                          $q = "SELECT DOCTOR.firstName, DOCTOR.lastName FROM DOCTOR where doctor_id = '$prescription_doctor'";
+                          $r2 = mysqli_query($dbc,$q);
+                          $results = mysqli_fetch_array($r2, MYSQLI_ASSOC);
+                          echo '<li> Prescribed by - ' . $results['firstName'] . ' ' . $results['lastName'] . '</li>';
+                        echo '</ul></li>';
                     }
-                    if ($row['status'] != '') {
-                        echo '<li> Status - ' . $row['status'] . '</li>';
-                    }
-                    if ($row['bloodPressure'] != '') {
-                        echo '<li> Blood Pressure - ' . $row['bloodPressure'] . '</li>';
-                    }
-                    if ($row['height'] != '') {
-                        echo '<li> Height - ' . $row['height'] . '</li>';
-                    }
-                    if ($row['Weight'] != '') {
-                        echo '<li> Weight - ' . $row['Weight'] . '</li>';
-                    }
-                  echo '</ul></li>';
-              }
-              echo '</ul>';
-              echo '<a href="patient.php?id=' . $id . '&new=1">Add New Visit</a><br><br>';
+                    echo '</ul>';
+                    echo '<a href="patient.php?id=' . $id . '&add=1">Add New Prescription</a><br><br>';
 
-              echo "<a href='home.php'>Go Back</a>";
+                    $q = "SELECT * FROM VISIT INNER JOIN PATIENT ON VISIT.patient_id = PATIENT.patient_id WHERE VISIT.patient_id = $id";
+                    $r = mysqli_query($dbc,$q);
+                    $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+
+                    echo '<p> Visit(s): </p>';
+                    echo '<ul>';
+                    foreach($r as $row) {
+                        echo '<li><strong>' . $row['type'] . '</strong> (<em>' . $row['visitDate'] . '</em>)<ul>';
+                          if ($row['diagnosis'] != '') {
+                              echo '<li> Diagnosis - ' . $row['diagnosis'] . '</li>';
+                          }
+                          if ($row['status'] != '') {
+                              echo '<li> Status - ' . $row['status'] . '</li>';
+                          }
+                          if ($row['bloodPressure'] != '') {
+                              echo '<li> Blood Pressure - ' . $row['bloodPressure'] . '</li>';
+                          }
+                          if ($row['height'] != '') {
+                              echo '<li> Height - ' . $row['height'] . '</li>';
+                          }
+                          if ($row['Weight'] != '') {
+                              echo '<li> Weight - ' . $row['Weight'] . '</li>';
+                          }
+                        echo '</ul></li>';
+                    }
+                    echo '</ul>';
+                    echo '<a href="patient.php?id=' . $id . '&new=1">Add New Visit</a><br><br>';
+
+                    echo "<a href='home.php'>Go Back</a>";
+
+                }
 
             }
 
         }
-
     }
 
     # checks that the form was submitted

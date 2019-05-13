@@ -110,18 +110,18 @@
 
 
         if(isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['hospitalname']) && isset($_POST['specialty']) && isset($_POST['dPNum']) && isset($_POST['demail']) && isset($_POST['daddress'])){
-          echo "help me";
+
           $firstname = mysqli_real_escape_string($dbc, trim($_POST['firstname']));
           $lastname = mysqli_real_escape_string($dbc, trim($_POST['lastname']));;
           $hospitalname = mysqli_real_escape_string($dbc, trim($_POST['hospitalname']));
+          echo "$_POST['hospitalname']";
           $specialty = $_POST['specialty'];
           $dphone = $_POST['dPNum'];
           $demail = $_POST['demail'];
           $daddress = $_POST['daddress'];
 
-          //echo $firstname . $lastname . $hospitalname . $specialty .
-          $q = "INSERT INTO DOCTOR (specialty, firstName, lastName, address, phoneNumber, email, affiliations) VALUES ('$specialty', '$firstname', '$lastname' , '$daddress', '$dphone', '$demail', '$hospitalname')";
-          $r = @mysqli_query($dbc, $q);
+          //$q = "INSERT INTO DOCTOR (specialty, firstName, lastName, address, phoneNumber, email, affiliations) VALUES ('$specialty', '$firstname', '$lastname' , '$daddress', '$dphone', '$demail', '$hospitalname')";
+          //$r = @mysqli_query($dbc, $q);
         }
 
 
@@ -175,17 +175,18 @@
                 echo '<label>Address</label><input type="text" name="daddress" required><br>';
 
                 echo '<select name="hospitalname">';
-                  $q = "SELECT hospital_id, name FROM HOSPITAL";
+                  $q = "SELECT * FROM HOSPITAL";
                   $r = @mysqli_query($dbc, $q);
-                  $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
+                  //$row = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-                  $arraylength = sizeof($row);
-                  for($x = -1; $x < $arraylength; $x++){
+                //  $arraylength = sizeof($row);
+                  //for($x = -1; $x < $arraylength; $x++){
                     foreach($r as $results){
-                      echo '<option value='. $row[$x] . '>' . $results['name'] . '</option>';
+                      echo '<option value='. $results['hospital_id']) . '>' . mysqli_real_escape_string($dbc, trim($results['name'])) . '</option>';
+
                     }
 
-                  }
+                //  }
                 echo '</select>';
                 echo '<input type="submit" name="submit" id="submit">';
                 echo '</form>';
