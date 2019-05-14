@@ -4,7 +4,7 @@ html{
   background-color:#fcfaf7;
 }
 body{
-  margin-top: 90px;
+  margin-top: 70px;
   height:100vh;
   padding-bottom:10px;
 }
@@ -56,16 +56,27 @@ a:hover{
   color:black;
 }
 .homeLogout{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   text-align:center;
   float:right;
   color:#cc0223;
+}
+
+.logout {
   padding: 5px 10px 0px 10px;
+}
+
+.searchBar {
+  padding-right: 10px;
 }
 
 table{
   width:75%;
   height:auto;
   text-align:left;
+  padding-top: 15px;
 }
 td{
   text-align:left;

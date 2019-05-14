@@ -19,6 +19,9 @@
     </nav>
 
     <form action="testingtingz.php" method="post">
+      <h3> Name<input type="text" name="hosname" required></h3>
+      <h3> Location<input type="text" name="location" required></h3>
+      <h3>Phone Number: <input type="numbernumber" name = "hosNum" pattern="\d*" minLength="10" maxlength="10"></h3>
       <input type="submit" name="test" value="test" id="submit">
     </form>
   </body>
@@ -30,34 +33,15 @@ require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
- if(isset($_POST['hospitalname'])){
-   $q = "SELECT name FROM HOSPITAL where id = $hospitalname";
-   $r = @mysqli_query($dbc, $q);
+  if(isset($_POST['hosname']) && isset($_POST['location']) && isset($_POST['hosNum'])){
+    $hosname = $_POST['hosname'];
+    $location = $_POST['location'];
+    $phone = $_POST['hosNum'];
 
-   $hospitalnamevar = $_POST['hospitalname'];
-   echo "$hospitalnamevar";
- }
-echo '<form action="testingtingz.php" method="post">';
-echo '<label>First Name</label><input type="text" name="firstname"><br>';
-//$dFirst =
-echo '<label>Last Name</label><input type="text" name="lastname"><br>';
-//$dFirst =
-echo '<label>Specialty</label><input type="text" name="specialty" ><br>';
-echo '<label>Phone Number</label><input type="numbernumber" name = "dPNum" pattern="\d*" minLength="10" maxlength="10" ><br>';
-echo '<label>Email</label><input type="email" name="demail" ><br>';
-echo '<label>Address</label><input type="text" name="daddress" ><br>';
 
-echo '<select name="hospitalname">';
-  $q = "SELECT * FROM HOSPITAL";
-  $r = @mysqli_query($dbc, $q);
-  $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
-
-  foreach($r as $results){
-    echo '<option value='. $results['hospital_id'] . '>' . $results['name'] . '</option>';
+    $q = "INSERT INTO HOSPITAL (name, location, phoneNumber) VALUES ('$hosname', '$location', '$phone')";
+    $r = $r = @mysqli_query($dbc, $q);
   }
-echo '</select>';
-echo '<input type="submit" name="submit" id="submit">';
-echo '</form>';
 
 }
  ?>
