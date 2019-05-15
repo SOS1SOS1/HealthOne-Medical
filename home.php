@@ -42,6 +42,13 @@
 
         require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
 
+        //Pagination tingz
+
+        //end pagination tingz
+
+
+
+
         if (isset($_GET['s']) && is_numeric($_GET['s'])) {
             $search = true;
         } else {
@@ -68,7 +75,7 @@
                 } else if ($last_name == "") {
                     $q = "SELECT * FROM PATIENT WHERE firstName LIKE '%$first_name%'";
                 } else {
-                    $q = "SELECT * FROM PATIENT WHERE firstName LIKE '%$first_name%' OR lastName LIKE '%$last_name%'";
+                    $q = "SELECT * FROM PATIENT WHERE firstName LIKE '%$first_name%' OR lastName LIKE '%$last_name%'  ";
                 }
                 $r = mysqli_query($dbc,$q);
 
@@ -84,7 +91,7 @@
             } else {
 
                 // if it errors, then it brings up all clients
-                $q = "SELECT * FROM PATIENT";
+                $q = "SELECT * FROM PATIENT LIMIT $start, $display";
                 $r = mysqli_query($dbc,$q);
                 $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
@@ -95,6 +102,9 @@
                   echo '<tr><td>';
                   echo $row['address'] . '</td><td >' . $row['phoneNumber'] . '</td><td>' . $row['email'] . '</td></tr>';
                 }
+                echo '<tr><td colspan = "6" class = "links">';
+                createLinks();
+                echo '</td></tr>';
                 echo'</table>';
 
             }
@@ -116,6 +126,10 @@
             echo'</table>';
 
         }
+
+        //pagination tingz pt 2
+
+        //end pagination
 
         include("footer.html");
 
