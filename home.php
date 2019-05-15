@@ -35,7 +35,7 @@
         </div>
       </div>
       <a href="home.php"><h1>HealthOne Medical</h1></a>
-      <!-- <a href="testingtingz.php">click for tests</a>  -->
+
     </nav>
 
     <?php

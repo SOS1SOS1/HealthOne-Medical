@@ -7,12 +7,15 @@
   </head>
   <body>
     <nav class="navmain">
-      <div class="homeLogout">
-        <?php  echo $_SESSION['user']; ?><br>
-        <a href="logout.php"> Logout</a><br>
-        <a href="addClient.php"> New Client </a>
+      <div class="otherLogout">
+        <div class="logoutdiff">
+            <?php  echo $_SESSION['user']; ?><br>
+            <a href="logout.php"> Logout</a><br>
+            <a href="addClient.php"> New Client </a>
+        </div>
       </div>
       <a href="home.php"><h1>HealthOne Medical</h1></a>
+
     </nav>
   </body>
 </html>
@@ -218,6 +221,7 @@
                     $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
                     $docID = $results['primaryDoctor'];
 
+                    //echo '<div style = "">';
                     echo '<h2>' . $results['firstName'] . ' ' . $results['lastName'];
                     echo '<a href="patient.php?id=' . $id . '&edit=1"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
                     echo '<a href="patient.php?id=' . $id . '&delete=1"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a></h2>';

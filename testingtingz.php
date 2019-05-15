@@ -8,13 +8,14 @@
   </head>
   <body>
     <nav class="navmain">
-      <div class="homeLogout">
-        <?php  echo $_SESSION['user']; ?><br>
-        <a href="logout.php"> Logout</a><br>
-        <a href="addClient.php"> New Client </a>
+      <div class="otherLogout">
+        <div class="logoutdiff">
+            <?php  echo $_SESSION['user']; ?><br>
+            <a href="logout.php"> Logout</a><br>
+            <a href="addClient.php"> New Client </a>
+        </div>
       </div>
       <a href="home.php"><h1>HealthOne Medical</h1></a>
-
 
     </nav>
 

@@ -7,39 +7,42 @@
   </head>
   <body>
     <nav class="navmain">
-      <div class="homeLogout">
-        <?php  echo $_SESSION['user']; ?><br>
-        <a href="logout.php"> Logout</a><br>
-        <a href="addClient.php"> New Client </a>
+      <div class="otherLogout">
+        <div class="logoutdiff">
+            <?php  echo $_SESSION['user']; ?><br>
+            <a href="logout.php"> Logout</a><br>
+            <a href="addClient.php"> New Client </a>
+        </div>
       </div>
       <a href="home.php"><h1>HealthOne Medical</h1></a>
-    </nav>
 
-    <form action = "addClient.php" method = "post">
-      <h3>First Name: <input type = "text" name = "fName" size = "15" maxlength="30" value="<?php if (isset($_POST['fName'])) echo $_POST['fName']; ?>" required></h3>
-      <h3>Last Name: <input type = "text" name = "lName" size = "15" maxlength="30" value="<?php if (isset($_POST['lName'])) echo $_POST['lName']; ?>" required></h3>
-      <h3>Address: <input type = "text" name = "address" size = "30" maxlength="50" value="<?php if (isset($_POST['address'])) echo $_POST['address']; ?>" required></h3>
-      <h3>Phone Number: <input type="numbernumber" name = "pNum" pattern="\d*" minLength="10" maxlength="10" value="<?php if (isset($_POST['pNum'])) echo $_POST['pNum']; ?>" required></h3>
-      <h3>Email: <input type = "email" name = "email" size = "25" maxlength="30" value="<?php if (isset($_POST['email'])) echo $_POST['email']; ?>" required></h3>
-      <h3>Primary Doctor: </h3>
-        <label>First Name - </label><input type = "text" name = "dFirstName" size = "15" maxlength="30" value="<?php if (isset($_POST['dFirstName'])) echo $_POST['dFirstName']; ?>" required></h3>
-        <label>Last Name - </label><input type = "text" name = "dLastName" size = "15" maxlength="30" value="<?php if (isset($_POST['dLastName'])) echo $_POST['dLastName']; ?>" required></h3>
-      <h3>Level of Coverage:
-        <select name = "coverage" value="<?php if (isset($_POST['coverage'])) echo $_POST['coverage']; ?>">
-          <option value = "Bronze">Bronze</option>
-          <option value = "Silver">Silver</option>
-          <option value = "Gold">Gold</option>
-        </select> </h3>
-      <a href="home.php"> <input type="submit" name="submit" value="Add Client" id="submit"></a>
-    </form>
+    </nav>
 
   </body>
 </html>
 
 <?php
 
-    # sticky form tingz
-
+    // shows new client form
+    function createClientForm($row_client) {
+        echo '<form action = "addClient.php" method = "post">';
+            echo '<h3>First Name: <input type = "text" name = "fName" size = "15" maxlength="30" value=' . $row_client['firstName'] . ' required></h3>';
+            echo '<h3>Last Name: <input type = "text" name = "lName" size = "15" maxlength="30" value=' . $row_client['lastName'] . ' required></h3>';
+            echo '<h3>Address: <input type = "text" name = "address" size = "30" maxlength="50" value="<?php if (isset($_POST['address'])) echo $_POST['address']; ?>" required></h3>';
+            echo '<h3>Phone Number: <input type="numbernumber" name = "pNum" pattern="\d*" minLength="10" maxlength="10" value="<?php if (isset($_POST['pNum'])) echo $_POST['pNum']; ?>" required></h3>';
+            echo '<h3>Email: <input type = "email" name = "email" size = "25" maxlength="30" value="<?php if (isset($_POST['email'])) echo $_POST['email']; ?>" required></h3>';
+            echo '<h3>Primary Doctor: </h3>';
+                echo '<label>First Name - </label><input type = "text" name = "dFirstName" size = "15" maxlength="30" value="<?php if (isset($_POST['dFirstName'])) echo $_POST['dFirstName']; ?>" required></h3>';
+                echo '<label>Last Name - </label><input type = "text" name = "dLastName" size = "15" maxlength="30" value="<?php if (isset($_POST['dLastName'])) echo $_POST['dLastName']; ?>" required></h3>';
+            echo '<h3>Level of Coverage:';
+                echo '<select name = "coverage" value="<?php if (isset($_POST['coverage'])) echo $_POST['coverage']; ?>">';
+                    echo '<option value = "Bronze">Bronze</option>';
+                    echo '<option value = "Silver">Silver</option>';
+                    echo '<option value = "Gold">Gold</option>';
+                echo '</select> </h3>';
+            echo '<a href="home.php"> <input type="submit" name="submit" value="Add Client" id="submit"></a>';
+        echo '</form>';
+    }
 
     # requires that we are able to connect to the database using are hidden php file
     require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
@@ -108,23 +111,17 @@
 
 
 
-        if (isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['hospitalname']) && isset($_POST['specialty']) && isset($_POST['dPNum']) && isset($_POST['demail']) && isset($_POST['daddress']) && isset($_POST['affiliation'])) {
-            $hospital_id = $_POST['hospitalname'];
-
-            $q = "SELECT name FROM HOSPITAL where hospital_id = '$hospital_id'";
-            $r = @mysqli_query($dbc, $q);
-            $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
+        if (isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['specialty']) && isset($_POST['dPNum']) && isset($_POST['demail']) && isset($_POST['daddress']) && isset($_POST['affiliation'])) {
 
             $firstname = mysqli_real_escape_string($dbc, trim($_POST['firstname']));
-            $lastname = mysqli_real_escape_string($dbc, trim($_POST['lastname']));;
-            $hospitalname = $row['name'];
-            $specialty = $_POST['specialty'];
-            $dphone = $_POST['dPNum'];
-            $demail = $_POST['demail'];
-            $daddress = $_POST['daddress'];
+            $lastname = mysqli_real_escape_string($dbc, trim($_POST['lastname']));
+            $specialty = mysqli_real_escape_string($dbc, trim($_POST['specialty']));
+            $dphone = mysqli_real_escape_string($dbc, trim($_POST['dPNum']));
+            $demail = mysqli_real_escape_string($dbc, trim($_POST['demail']));
+            $daddress = mysqli_real_escape_string($dbc, trim($_POST['daddress']));
 
             // adds new doctor
-            $q = "INSERT INTO DOCTOR (specialty, firstName, lastName, address, phoneNumber, email, affiliations) VALUES ('$specialty', '$firstname', '$lastname' , '$daddress', '$dphone', '$demail', '$hospitalname')";
+            /*$q = "INSERT INTO DOCTOR (specialty, firstName, lastName, address, phoneNumber, email) VALUES ('$specialty', '$firstname', '$lastname' , '$daddress', '$dphone', '$demail')";
             $r = @mysqli_query($dbc, $q);
 
             // gets doctor id
@@ -133,14 +130,12 @@
             $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
             $doctor_id = $row['doctor_id'];
 
-            // doc id not working yet
-
             $affiliation[] = $_POST['affiliation'];
             foreach ($_POST['affiliation'] as $hospital_id) {
                 // adds affiliation
                 $q = "INSERT INTO AFFILIATION (doctor, hospital) VALUES ('$doctor_id', '$hospital_id')";
                 $r = @mysqli_query($dbc, $q);
-            }
+            }*/
 
         }
 
@@ -197,16 +192,6 @@
                         foreach($r as $results){
                             echo '<input type="checkbox" name="affiliation[]" value=' . $results['hospital_id'] . '> ' . $results['name'] . ' <br>';
                         }
-
-                        echo '<select name="hospitalname">';
-                          $q = "SELECT * FROM HOSPITAL";
-                          $r = @mysqli_query($dbc, $q);
-
-                            foreach($r as $results){
-                              echo '<option value='. $results['hospital_id'] . '>' . $results['name'] . '</option>';
-                            }
-
-                        echo '</select>';
                         echo '<input type="submit" name="submit" id="submit">';
                     echo '</form>';
 

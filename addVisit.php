@@ -7,12 +7,15 @@
   </head>
   <body>
     <nav class="navmain">
-      <div class="homeLogout">
-        <?php  echo $_SESSION['user']; ?>
-        <a href="logout.php"> Logout</a>
-        <a href="addClient.php"> New Client </a>
+      <div class="otherLogout">
+        <div class="logoutdiff">
+            <?php  echo $_SESSION['user']; ?><br>
+            <a href="logout.php"> Logout</a><br>
+            <a href="addClient.php"> New Client </a>
+        </div>
       </div>
-      <h1>HealthOne Medical</h1>
+      <a href="home.php"><h1>HealthOne Medical</h1></a>
+
     </nav>
 
     <?php
