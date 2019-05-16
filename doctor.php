@@ -36,7 +36,9 @@
   $r = mysqli_query($dbc,$q);
   $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-  echo '<h2>' . $results['lastName'] . ", " . $results['firstName'] . "</h2>";
+  echo '<h2>' . $results['lastName'] . ", " . $results['firstName'];
+  echo '<a href="editDoctor.php?id_doc=' . $id . '&id_pat=' . $id_patient . '"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
+  echo '<a href="deleteDoctor.php?id_doc=' . $id . '&id_pat=' . $id_patient . '"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a></h2>';
   echo '<p> Address: ' . $results['address'] . '</p>';
   echo '<p> Phone Number: ' . $results['phoneNumber'] . '</p>';
   echo '<p> Email: ' . $results['email'] . '</p>';

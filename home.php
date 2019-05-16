@@ -43,15 +43,33 @@
         require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
 
         //Pagination tingz
+        $display = 13;
 
+        if(isset($_GET['p']) && is_numeric($_GET['p'])){
+          $pages = $_GET['p'];
+        } else{
+          $q = "SELECT COUNT(patient_id) FROM PATIENT";
+          $r = @mysqli_query($dbc, $q);
+          $row = @mysqli_fetch_array($r, MYSQLI_NUM);
+          $records = $row[0];
+
+          if($records > $display){
+            $pages = ceil($records/$display);
+          } else {
+            $pages = 1;
+          }
+
+        }
         //end pagination tingz
 
 
 
 
         if (isset($_GET['s']) && is_numeric($_GET['s'])) {
+            $start = $_GET['s'];
             $search = true;
         } else {
+            $start = 0;
             $search = false;
         }
 
@@ -102,9 +120,6 @@
                   echo '<tr><td>';
                   echo $row['address'] . '</td><td >' . $row['phoneNumber'] . '</td><td>' . $row['email'] . '</td></tr>';
                 }
-                echo '<tr><td colspan = "6" class = "links">';
-                createLinks();
-                echo '</td></tr>';
                 echo'</table>';
 
             }
@@ -112,7 +127,7 @@
         } else {
 
             // brings up all clients
-            $q = "SELECT * FROM PATIENT";
+            $q = "SELECT * FROM PATIENT LIMIT $start, $display";
             $r = mysqli_query($dbc,$q);
             $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
@@ -128,7 +143,30 @@
         }
 
         //pagination tingz pt 2
+        if($pages > 1){
+          echo '<br><p class="pages">';
 
+          $current_page = ($start/ $display) +1;
+
+
+          if($current_page != 1){
+            echo '<a href="home.php? s=' . ($start - $display) . '&p='. $pages .'"> Previous </a>';
+          }
+
+          for($i=1;$i<=$pages;$i++){
+            if($i != $current_page){
+              echo '<a href="home.php?s='. (($display * ($i -1)))  . '&p=' . $pages . '">'. $i .'</a>';
+            } else {
+              echo '   ';
+              echo $i .' ';
+            }
+          }
+
+          if($current_page != $pages){
+            echo '<a href="home.php?s=' . ($start + $display) .'&p=' . $pages .'"> Next </a>';
+          }
+
+        }
         //end pagination
 
         include("footer.html");

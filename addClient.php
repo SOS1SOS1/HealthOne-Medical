@@ -22,7 +22,12 @@
 </html>
 
 <?php
-
+session_start();
+// checks if session variable user is set, if they logged in
+if (!isset($_SESSION['user'])) {
+    header('Location: login.php');
+    //exit();
+}
     // shows new client form
     function createClientForm() {
         echo '<form action = "addClient.php" method = "post">';

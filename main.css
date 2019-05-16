@@ -113,3 +113,9 @@ td{
   padding: 5px 10px 0px 10px;
   text-align:center;
 }
+.pages{
+  text-align:center;
+}
+.pages a{
+  padding-left:10px;
+}
