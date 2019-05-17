@@ -42,6 +42,7 @@
   echo '<p> Address: ' . $results['address'] . '</p>';
   echo '<p> Phone Number: ' . $results['phoneNumber'] . '</p>';
   echo '<p> Email: ' . $results['email'] . '</p>';
+  echo '<p> Specialty: ' . $results['specialty'] . '</p>';
 
   $q = "SELECT HOSPITAL.hospital_id, HOSPITAL.name FROM HOSPITAL, DOCTOR INNER JOIN AFFILIATION ON DOCTOR.doctor_id = doctor WHERE doctor_id = $id and hospital_id = hospital";
   $r = @mysqli_query($dbc,$q);

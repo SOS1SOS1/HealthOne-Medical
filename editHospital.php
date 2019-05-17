@@ -43,7 +43,7 @@
     $row_hospital = mysqli_fetch_array($r_hos, MYSQLI_ASSOC);
 
     echo '<form action = "editHospital.php?id=' . $id . '&id_doc=' . $id_doc . '&id_pat=' . $id_pat . '" method = "post">';
-        echo '<h3>Name: <input type = "text" name = "name" size = "15" maxlength="30" value="' . $row_hospital['name'] . '"></h3>';
+        echo '<h3>Name: <input type = "text" name = "name" size = "40" maxlength="40" value="' . $row_hospital['name'] . '"></h3>';
         echo '<h3>Location: <input type = "text" name = "location" size = "30" maxlength="50" value="' . $row_hospital['location'] . '"></h3>';
         echo '<h3>Phone Number: <input type="numbernumber" name = "phoneNumber" pattern="\d*" minLength="10" maxlength="10" value="' . $row_hospital['phoneNumber'] . '"></h3>';
         echo '<input type="submit" name="submit" value="Update Hospital" id="submit"><br><br>';

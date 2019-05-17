@@ -52,53 +52,21 @@
     # checks that the form was submitted
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-        // errors array
-        $errors = [];
+        // deletes hospital information
+        $q = "DELETE FROM HOSPITAL WHERE hospital_id = $id";
+        $r = @mysqli_query($dbc, $q);
 
-        // checks for a first name
-        if (empty($_POST['name'])) {
-            $errors[] = 'You forgot to enter the hospital\'s name.';
-        } else {
-            $name = mysqli_real_escape_string($dbc, trim($_POST['name']));
-        }
+        // delete hospital's affiliations
+        $q = "DELETE FROM HOSPITAL WHERE hospital = $id";
+        $r = @mysqli_query($dbc, $q);
 
-        // checks for a last name
-        if (empty($_POST['location'])) {
-            $errors[] = 'You forgot to enter the hospital\'s location.';
-        } else {
-            $location = mysqli_real_escape_string($dbc, trim($_POST['location']));
-        }
+        mysqli_close($dbc);
 
-        // checks for an address
-        if (empty($_POST['phoneNumber'])) {
-            $errors[] = 'You forgot to enter the hospital\'s phone number.';
-        } else {
-            $phoneNum = mysqli_real_escape_string($dbc, trim($_POST['phoneNumber']));
-        }
-
-        if (empty($errors)) {
-
-            // updates patient information
-            $q = "UPDATE HOSPITAL SET name = '$name', location = '$location', phoneNumber = '$phoneNum' WHERE hospital_id = $id";
-            $r = @mysqli_query($dbc, $q);
-
-        } else {
-
-            # reports the errors
-            echo '<p> The following error(s) occured:<br>';
-            foreach ($errors as $msg) {
-                echo " - $msg<br>\n";
-            }
-            echo '</p><p> Please try again. </p>';
-
-        }
-
-        // redirects user back to client page
+        // redirects user back to hospital page
         $hospital_page = "http://shantim.smtchs.org/HealthOne_Medical/hospital.php?id_doc=" . $id_doc ."&id_hos=" . $id . "&id_pat=" . $id_pat;
         echo "<script type='text/javascript'>window.top.location='$hospital_page';</script>"; exit;
 
     }
 
-    mysqli_close($dbc);
     include("footer.html");
 ?>

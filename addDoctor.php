@@ -138,6 +138,7 @@
             $q = "UPDATE DOCTOR SET firstName = '$first_name', lastName = '$last_name', address = '$address', phoneNumber = '$phone_number', email = '$email', specialty = '$specialty' WHERE doctor_id = $idDoc";
             $r = @mysqli_query($dbc, $q);
 
+            // adds doctor's affiliations
             foreach ($_POST['affiliation'] as $hospital_id) {
                 // adds affiliation
                 $q = "INSERT INTO AFFILIATION (doctor, hospital) VALUES ('$idDoc', '$hospital_id')";

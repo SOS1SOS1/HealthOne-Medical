@@ -101,30 +101,30 @@
 
     function createNewVisitForm($r_doctor, $patient_id) {
         echo '<form action = "addVisit.php?id=' .  $patient_id . '" method = "post">';
-        echo '<h3>Date: <input type = "date" name = "visitDate" value = "2019-01-01"></h3>';
+            echo '<h3>Date: <input type = "date" name = "visitDate" value = "2019-01-01"></h3>';
 
-        echo '<h3>Type of Visit: ';
-        echo '<select name="type">';
-            echo '<option value = "New Issue">New Issue</option>';
-            echo '<option value = "Follow-Up">Follow-Up</option>';
-            echo '<option value = "Checkup">Checkup</option>';
-        echo '</select></h3>';
+            echo '<h3>Type of Visit: ';
+            echo '<select name="type">';
+                echo '<option value = "New Issue">New Issue</option>';
+                echo '<option value = "Follow-Up">Follow-Up</option>';
+                echo '<option value = "Checkup">Checkup</option>';
+            echo '</select></h3>';
 
-        echo '<h3>Doctor: ';
-        echo '<select name="doctor">';
-            foreach($r_doctor as $results) {
-                echo '<option value = ' . $results['doctor_id'] . '>' . $results['firstName'] . ' ' . $results['lastName'] . '</option>';
-            }
-        echo '</select></h3>';
+            echo '<h3>Doctor: ';
+            echo '<select name="doctor">';
+                foreach($r_doctor as $results) {
+                    echo '<option value = ' . $results['doctor_id'] . '>' . $results['firstName'] . ' ' . $results['lastName'] . '</option>';
+                }
+            echo '</select></h3>';
 
-        echo '<h3>Status: <input type = "text" name = "status" size = "30" maxlength="50"></h3>';
-        echo '<h3>Diagnosis: <input type="text" name = "diagnosis" size = 30; maxlength="75"></h3>';
+            echo '<h3>Status: <input type = "text" name = "status" size = "30" maxlength="50"></h3>';
+            echo '<h3>Diagnosis: <input type="text" name = "diagnosis" size = 30; maxlength="75"></h3>';
 
-        echo '<h3>Current Blood Pressure: <input type = "text" name = "bloodPressure" size = "10" maxlength="20"></h3>';
-        echo '<h3>Height: <input type="text" name = "height" size = 10; maxlength="15"></h3>';
-        echo '<h3>Weight: <input type="text" name = "weight" size = 10; maxlength="15"></h3>';
+            echo '<h3>Current Blood Pressure: <input type = "text" name = "bloodPressure" size = "10" maxlength="20"></h3>';
+            echo '<h3>Height: <input type="text" name = "height" size = 10; maxlength="15"></h3>';
+            echo '<h3>Weight: <input type="text" name = "weight" size = 10; maxlength="15"></h3>';
 
-        echo '<h3><input id = "submit" type = "submit" name = "submit" value = "Add Visit"></h3>';
+            echo '<h3><input id = "submit" type = "submit" name = "submit" value = "Add Visit"></h3>';
         echo '</form>';
         echo '<a href="patient.php?id=' . $patient_id . '">Cancel</a>';
     }
@@ -246,10 +246,12 @@
                     $r = mysqli_query($dbc,$q);
                     $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-                    echo '<p> Prescription(s): </p>';
-                    echo '<ul>';
+                    echo '<p> Prescription(s): </p>';echo '<ul>';
                     foreach($r as $row) {
-                        echo '<li><strong>' . $row['name'] . '</strong> (<em>' . $row['description'] . '</em>)<ul>';
+                        echo '<li><strong>' . $row['name'] . '</strong> (<em>' . $row['description'] . '</em>)';
+                          echo '<a href="editPrescription.php?id=' . $row['prescript_id'] . '&id_doc=' . $id . '&id_pat=' . $id . '"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
+                          echo '<a href="deletePrescription.php?id=' . $row['prescript_id'] . '&id_doc=' . $id . '&id_pat=' . $id . '"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a></h2>';
+                          echo '<ul>';
                           echo '<li> Purpose - ' . $row['purpose'] . '</li>';
                           echo '<li> Possible Side Effects - ' . $row['sideEffects'] . '</li>';
                           echo '<li> Start Date: ' . $row['startDate'] . '</li>';
@@ -276,7 +278,10 @@
                     echo '<p> Visit(s): </p>';
                     echo '<ul>';
                     foreach($r as $row) {
-                        echo '<li><strong>' . $row['type'] . '</strong> (<em>' . $row['visitDate'] . '</em>)<ul>';
+                        echo '<li><strong>' . $row['type'] . '</strong> (<em>' . $row['visitDate'] . '</em>)';
+                          echo '<a href="editVisit.php?id=' . $row['visit_id'] . '&id_doc=' . $id . '&id_pat=' . $id . '"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
+                          echo '<a href="deleteVisit.php?id=' . $row['visit_id'] . '&id_doc=' . $id . '&id_pat=' . $id . '"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a></h2>';
+                          echo '<ul>';
                           if ($row['diagnosis'] != '') {
                               echo '<li> Diagnosis - ' . $row['diagnosis'] . '</li>';
                           }
@@ -292,10 +297,15 @@
                           if ($row['Weight'] != '') {
                               echo '<li> Weight - ' . $row['Weight'] . '</li>';
                           }
+                          $doc = $row['doctor_id'];
+                          $q = "SELECT * FROM DOCTOR WHERE doctor_id = $doc";
+                          $r = mysqli_query($dbc,$q);
+                          $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+                          echo '<li> Doctor - ' . $results['firstName'] . ' ' . $results['lastName'] . '</li>';
                         echo '</ul></li>';
                     }
                     echo '</ul>';
-                    echo '<a href="patient.php?id=' . $id . '&new=1">Add New Visit</a><br><br>';
+                    echo '<a href="patient.php?id=' . $id . '&new=1">Add New Visit</a><br><br><br>';
 
                     echo "<a href='home.php'>Go Back</a>";
 
