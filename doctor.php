@@ -1,26 +1,7 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title> Doctor Info </title>
-    <link rel="stylesheet" href="main.css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
-  </head>
-  <body>
-    <nav class="navmain">
-      <div class="otherLogout">
-        <div class="logoutdiff">
-            <?php  echo $_SESSION['user']; ?><br>
-            <a href="logout.php"> Logout</a><br>
-            <a href="addClient.php"> New Client </a>
-        </div>
-      </div>
-      <a href="home.php"><h1>HealthOne Medical</h1></a>
-
-    </nav>
-  </body>
-</html>
-
 <?php
+
+  $page_title = "Doctor Information";
+  include('header.php');
 
   # checks that there is an id and that it is a number
   if (isset($_GET['id_doc']) && is_numeric($_GET['id_doc'])) {  // from table.php
@@ -37,8 +18,11 @@
   $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
   echo '<h2>' . $results['lastName'] . ", " . $results['firstName'];
-  echo '<a href="editDoctor.php?id_doc=' . $id . '&id_pat=' . $id_patient . '"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
-  echo '<a href="deleteDoctor.php?id_doc=' . $id . '&id_pat=' . $id_patient . '"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a></h2>';
+  if ($_SESSION['user'] == "admin") {
+      echo '<a href="editDoctor.php?id_doc=' . $id . '&id_pat=' . $id_patient . '"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
+      echo '<a href="deleteDoctor.php?id_doc=' . $id . '&id_pat=' . $id_patient . '"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a>';
+  }
+  echo '</h2>';
   echo '<p> Address: ' . $results['address'] . '</p>';
   echo '<p> Phone Number: ' . $results['phoneNumber'] . '</p>';
   echo '<p> Email: ' . $results['email'] . '</p>';

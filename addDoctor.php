@@ -1,27 +1,7 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title> Add Client </title>
-    <link rel="stylesheet" href="main.css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
-  </head>
-  <body>
-    <nav class="navmain">
-      <div class="otherLogout">
-        <div class="logoutdiff">
-            <?php  echo $_SESSION['user']; ?><br>
-            <a href="logout.php"> Logout</a><br>
-            <a href="addClient.php"> New Client </a>
-        </div>
-      </div>
-      <a href="home.php"><h1>HealthOne Medical</h1></a>
-
-    </nav>
-
-  </body>
-</html>
-
 <?php
+
+    $page_title = "Add Doctor";
+    include('header.php');
 
     // shows new doctor form
     function createDoctorForm($r_hospital, $row_doctor, $id_p) {

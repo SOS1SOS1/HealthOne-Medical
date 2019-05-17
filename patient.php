@@ -1,26 +1,7 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title> Patient Info </title>
-    <link rel="stylesheet" href="main.css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
-  </head>
-  <body>
-    <nav class="navmain">
-      <div class="otherLogout">
-        <div class="logoutdiff">
-            <?php  echo $_SESSION['user']; ?><br>
-            <a href="logout.php"> Logout</a><br>
-            <a href="addClient.php"> New Client </a>
-        </div>
-      </div>
-      <a href="home.php"><h1>HealthOne Medical</h1></a>
-
-    </nav>
-  </body>
-</html>
-
 <?php
+
+    $page_title = "Client Information";
+    include('header.php');
 
     function createAddForm($r_drug, $r_doctor, $patient_id) {
         echo '<form action = "patient.php?id=' .  $patient_id . '" method = "post">';
@@ -223,9 +204,11 @@
 
                     //echo '<div style = "">';
                     echo '<h2>' . $results['firstName'] . ' ' . $results['lastName'];
-                    echo '<a href="patient.php?id=' . $id . '&edit=1"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
-                    echo '<a href="patient.php?id=' . $id . '&delete=1"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a></h2>';
-
+                    if ($_SESSION['user'] == "admin") {
+                        echo '<a href="patient.php?id=' . $id . '&edit=1"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
+                        echo '<a href="patient.php?id=' . $id . '&delete=1"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a>';
+                    }
+                    echo '</h2>';
                     echo '<p> Address: ' . $results['address'] . '</p>';
                     echo '<p> Phone Number: ' . $results['phoneNumber'] . '</p>';
                     echo '<p> Email: ' . $results['email'] . '</p>';
@@ -250,7 +233,7 @@
                     foreach($r as $row) {
                         echo '<li><strong>' . $row['name'] . '</strong> (<em>' . $row['description'] . '</em>)';
                           echo '<a href="editPrescription.php?id=' . $row['prescript_id'] . '&id_doc=' . $id . '&id_pat=' . $id . '"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
-                          echo '<a href="deletePrescription.php?id=' . $row['prescript_id'] . '&id_doc=' . $id . '&id_pat=' . $id . '"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a></h2>';
+                          echo '<a href="deletePrescription.php?id=' . $row['prescript_id'] . '&id_doc=' . $id . '&id_pat=' . $id . '"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a>';
                           echo '<ul>';
                           echo '<li> Purpose - ' . $row['purpose'] . '</li>';
                           echo '<li> Possible Side Effects - ' . $row['sideEffects'] . '</li>';
@@ -280,7 +263,7 @@
                     foreach($r as $row) {
                         echo '<li><strong>' . $row['type'] . '</strong> (<em>' . $row['visitDate'] . '</em>)';
                           echo '<a href="editVisit.php?id=' . $row['visit_id'] . '&id_doc=' . $id . '&id_pat=' . $id . '"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
-                          echo '<a href="deleteVisit.php?id=' . $row['visit_id'] . '&id_doc=' . $id . '&id_pat=' . $id . '"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a></h2>';
+                          echo '<a href="deleteVisit.php?id=' . $row['visit_id'] . '&id_doc=' . $id . '&id_pat=' . $id . '"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a>';
                           echo '<ul>';
                           if ($row['diagnosis'] != '') {
                               echo '<li> Diagnosis - ' . $row['diagnosis'] . '</li>';

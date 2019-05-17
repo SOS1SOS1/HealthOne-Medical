@@ -1,33 +1,8 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title> Add Client </title>
-    <link rel="stylesheet" href="main.css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
-  </head>
-  <body>
-    <nav class="navmain">
-      <div class="otherLogout">
-        <div class="logoutdiff">
-            <?php  echo $_SESSION['user']; ?><br>
-            <a href="logout.php"> Logout</a><br>
-            <a href="addClient.php"> New Client </a>
-        </div>
-      </div>
-      <a href="home.php"><h1>HealthOne Medical</h1></a>
-
-    </nav>
-
-  </body>
-</html>
-
 <?php
-session_start();
-// checks if session variable user is set, if they logged in
-if (!isset($_SESSION['user'])) {
-    header('Location: login.php');
-    //exit();
-}
+
+    $page_title = "Add Client";
+    include('header.php');
+
     // shows new client form
     function createClientForm() {
         echo '<form action = "addClient.php" method = "post">';
@@ -206,7 +181,7 @@ if (!isset($_SESSION['user'])) {
 
     }
 
-    echo "<a href='home.php'>Go Back</a>";
+    echo "<a href='settings.php'>Go Back</a>";
 
     mysqli_close($dbc);
     include("footer.html");

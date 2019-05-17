@@ -19,11 +19,12 @@
 
     </nav>
 
-    <form action="testingtingz.php" method="post">
+    <form action="addHospital.php" method="post">
       <h3> Name<input type="text" name="hosname" required></h3>
       <h3> Location<input type="text" name="location" required></h3>
       <h3>Phone Number: <input type="numbernumber" name = "hosNum" pattern="\d*" minLength="10" maxlength="10"></h3>
-      <input type="submit" name="test" value="test" id="submit">
+      <input type="submit" name="test" value="Add Hospital" id="submit"><br><br>
+      <a href='settings.php'>Cancel</a>
     </form>
   </body>
 </html>
