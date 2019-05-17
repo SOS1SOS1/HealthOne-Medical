@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -8,7 +6,7 @@
     <link rel="stylesheet" href="main.css">
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
     <?php
-
+        // NOTE: fix header location thing
         session_start();
         // checks if session variable user is set, if they logged in
         if (!isset($_SESSION['user'])) {

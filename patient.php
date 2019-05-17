@@ -24,27 +24,27 @@
 
     function createAddForm($r_drug, $r_doctor, $patient_id) {
         echo '<form action = "patient.php?id=' .  $patient_id . '" method = "post">';
-        echo '<h3>Drug Name: ';
-        echo '<select name="drug">';
-            foreach($r_drug as $results) {
-                echo '<option value = ' . $results['name'] . '>' . $results['name'] . '</option>';
-            }
-        echo '</select></h3>';
-        echo '<h3>Description: <input type = "text" name = "desc" size = "30" maxlength="100"></h3>';
-        echo '<h3>Start Date: <input type = "date" name = "startDate" value = "2019-01-01"></h3>';
-        echo '<h3>End Date: <input type = "date" name = "endDate" value = "2019-01-01"></h3>';
-        echo '<h3>Dosage: <input type="text" name = "dosage" maxlength="25"></h3>';
-        echo '<h3>Duration: <input type = "text" name = "duration" size = "25" maxlength="30"></h3>';
-        echo '<h3>Size: <input type="number" name = "size" pattern="\d*" minLength="1" maxlength="5"></h3>';
-        echo '<h3>Number of Refills: <input type="text" name = "refills" pattern="\d*" minLength="1" maxlength="5"></h3>';
-        echo '<h3>Prescribed by: ';
-        echo '<select name="doctor">';
-            foreach($r_doctor as $results) {
-                echo '<option value = ' . $results['doctor_id'] . '>' . $results['firstName'] . ' ' . $results['lastName'] . '</option>';
-            }
-        echo '</select></h3>';
+            echo '<h3>Drug Name: ';
+            echo '<select name="drug">';
+                foreach($r_drug as $results) {
+                    echo '<option value = ' . $results['name'] . '>' . $results['name'] . '</option>';
+                }
+            echo '</select></h3>';
+            echo '<h3>Description: <input type = "text" name = "desc" size = "30" maxlength="100"></h3>';
+            echo '<h3>Start Date: <input type = "date" name = "startDate" value = "2019-01-01"></h3>';
+            echo '<h3>End Date: <input type = "date" name = "endDate" value = "2019-01-01"></h3>';
+            echo '<h3>Dosage: <input type="text" name = "dosage" maxlength="25"></h3>';
+            echo '<h3>Duration: <input type = "text" name = "duration" size = "25" maxlength="30"></h3>';
+            echo '<h3>Size: <input type="number" name = "size" pattern="\d*" minLength="1" maxlength="5"></h3>';
+            echo '<h3>Number of Refills: <input type="text" name = "refills" pattern="\d*" minLength="1" maxlength="5"></h3>';
+            echo '<h3>Prescribed by: ';
+            echo '<select name="doctor">';
+                foreach($r_doctor as $results) {
+                    echo '<option value = ' . $results['doctor_id'] . '>' . $results['firstName'] . ' ' . $results['lastName'] . '</option>';
+                }
+            echo '</select></h3>';
 
-        echo '<h3><input id = "submit" type = "submit" name = "submit" value = "Add Drug"></h3>';
+            echo '<h3><input id = "submit" type = "submit" name = "submit" value = "Add Prescription"></h3>';
         echo '</form>';
         echo '<a href="patient.php?id=' . $patient_id . '">Cancel</a>';
     }
@@ -378,12 +378,11 @@
             $refills = mysqli_real_escape_string($dbc, trim($_POST['refills']));
         }
 
-        // checks for a drug name
+        // checks for a doctor name
         if (empty($_POST['doctor'])) {
             $errors[] = 'You forgot to enter the name of the doctor who prescribed the drug.';
         } else {
             $id_doc = mysqli_real_escape_string($dbc, trim($_POST['doctor']));
-            echo $id_doc;
         }
 
         if (isset($_GET['id'])) {
@@ -407,11 +406,11 @@
                 // checks if there were no errors
                 if ($drugs == 0) {
                     // inserts the new patient
-                    //$q = "INSERT INTO PRESCRIPTION (patient_id, doctor_id, drug_id, description, startDate, endDate, dosage, duration, size, numRefill) VALUES ('$id_pat', '$id_doc', '$drugID', '$desc', '$start_date',  '$end_date', '$dosage', '$duration', '$size', '$refills')";
-                    //$r = @mysqli_query($dbc, $q);
+                    $q = "INSERT INTO PRESCRIPTION (patient_id, doctor_id, drug_id, description, startDate, endDate, dosage, duration, size, numRefill) VALUES ('$id_pat', '$id_doc', '$drugID', '$desc', '$start_date',  '$end_date', '$dosage', '$duration', '$size', '$refills')";
+                    $r = @mysqli_query($dbc, $q);
                 } else {
-                    //echo '<p> The following error(s) occured:<br>';
-                    //echo " - Prescription already exists.";
+                    echo '<p> The following error(s) occured:<br>';
+                    echo " - Prescription already exists.";
                 }
 
             } else {
