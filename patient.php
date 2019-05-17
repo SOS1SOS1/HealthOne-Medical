@@ -24,27 +24,27 @@
 
     function createAddForm($r_drug, $r_doctor, $patient_id) {
         echo '<form action = "patient.php?id=' .  $patient_id . '" method = "post">';
-        echo '<h3>Drug Name: ';
-        echo '<select name="drug">';
-            foreach($r_drug as $results) {
-                echo '<option value = ' . $results['name'] . '>' . $results['name'] . '</option>';
-            }
-        echo '</select></h3>';
-        echo '<h3>Description: <input type = "text" name = "desc" size = "30" maxlength="100"></h3>';
-        echo '<h3>Start Date: <input type = "date" name = "startDate" value = "2019-01-01"></h3>';
-        echo '<h3>End Date: <input type = "date" name = "endDate" value = "2019-01-01"></h3>';
-        echo '<h3>Dosage: <input type="text" name = "dosage" maxlength="25"></h3>';
-        echo '<h3>Duration: <input type = "text" name = "duration" size = "25" maxlength="30"></h3>';
-        echo '<h3>Size: <input type="number" name = "size" pattern="\d*" minLength="1" maxlength="5"></h3>';
-        echo '<h3>Number of Refills: <input type="text" name = "refills" pattern="\d*" minLength="1" maxlength="5"></h3>';
-        echo '<h3>Prescribed by: ';
-        echo '<select name="doctor">';
-            foreach($r_doctor as $results) {
-                echo '<option value = ' . $results['doctor_id'] . '>' . $results['firstName'] . ' ' . $results['lastName'] . '</option>';
-            }
-        echo '</select></h3>';
+            echo '<h3>Drug Name: ';
+            echo '<select name="drug">';
+                foreach($r_drug as $results) {
+                    echo '<option value = ' . $results['name'] . '>' . $results['name'] . '</option>';
+                }
+            echo '</select></h3>';
+            echo '<h3>Description: <input type = "text" name = "desc" size = "30" maxlength="100"></h3>';
+            echo '<h3>Start Date: <input type = "date" name = "startDate" value = "2019-01-01"></h3>';
+            echo '<h3>End Date: <input type = "date" name = "endDate" value = "2019-01-01"></h3>';
+            echo '<h3>Dosage: <input type="text" name = "dosage" maxlength="25"></h3>';
+            echo '<h3>Duration: <input type = "text" name = "duration" size = "25" maxlength="30"></h3>';
+            echo '<h3>Size: <input type="number" name = "size" pattern="\d*" minLength="1" maxlength="5"></h3>';
+            echo '<h3>Number of Refills: <input type="text" name = "refills" pattern="\d*" minLength="1" maxlength="5"></h3>';
+            echo '<h3>Prescribed by: ';
+            echo '<select name="doctor">';
+                foreach($r_doctor as $results) {
+                    echo '<option value = ' . $results['doctor_id'] . '>' . $results['firstName'] . ' ' . $results['lastName'] . '</option>';
+                }
+            echo '</select></h3>';
 
-        echo '<h3><input id = "submit" type = "submit" name = "submit" value = "Add Drug"></h3>';
+            echo '<h3><input id = "submit" type = "submit" name = "submit" value = "Add Prescription"></h3>';
         echo '</form>';
         echo '<a href="patient.php?id=' . $patient_id . '">Cancel</a>';
     }
@@ -101,30 +101,30 @@
 
     function createNewVisitForm($r_doctor, $patient_id) {
         echo '<form action = "addVisit.php?id=' .  $patient_id . '" method = "post">';
-        echo '<h3>Date: <input type = "date" name = "visitDate" value = "2019-01-01"></h3>';
+            echo '<h3>Date: <input type = "date" name = "visitDate" value = "2019-01-01"></h3>';
 
-        echo '<h3>Type of Visit: ';
-        echo '<select name="type">';
-            echo '<option value = "New Issue">New Issue</option>';
-            echo '<option value = "Follow-Up">Follow-Up</option>';
-            echo '<option value = "Checkup">Checkup</option>';
-        echo '</select></h3>';
+            echo '<h3>Type of Visit: ';
+            echo '<select name="type">';
+                echo '<option value = "New Issue">New Issue</option>';
+                echo '<option value = "Follow-Up">Follow-Up</option>';
+                echo '<option value = "Checkup">Checkup</option>';
+            echo '</select></h3>';
 
-        echo '<h3>Doctor: ';
-        echo '<select name="doctor">';
-            foreach($r_doctor as $results) {
-                echo '<option value = ' . $results['doctor_id'] . '>' . $results['firstName'] . ' ' . $results['lastName'] . '</option>';
-            }
-        echo '</select></h3>';
+            echo '<h3>Doctor: ';
+            echo '<select name="doctor">';
+                foreach($r_doctor as $results) {
+                    echo '<option value = ' . $results['doctor_id'] . '>' . $results['firstName'] . ' ' . $results['lastName'] . '</option>';
+                }
+            echo '</select></h3>';
 
-        echo '<h3>Status: <input type = "text" name = "status" size = "30" maxlength="50"></h3>';
-        echo '<h3>Diagnosis: <input type="text" name = "diagnosis" size = 30; maxlength="75"></h3>';
+            echo '<h3>Status: <input type = "text" name = "status" size = "30" maxlength="50"></h3>';
+            echo '<h3>Diagnosis: <input type="text" name = "diagnosis" size = 30; maxlength="75"></h3>';
 
-        echo '<h3>Current Blood Pressure: <input type = "text" name = "bloodPressure" size = "10" maxlength="20"></h3>';
-        echo '<h3>Height: <input type="text" name = "height" size = 10; maxlength="15"></h3>';
-        echo '<h3>Weight: <input type="text" name = "weight" size = 10; maxlength="15"></h3>';
+            echo '<h3>Current Blood Pressure: <input type = "text" name = "bloodPressure" size = "10" maxlength="20"></h3>';
+            echo '<h3>Height: <input type="text" name = "height" size = 10; maxlength="15"></h3>';
+            echo '<h3>Weight: <input type="text" name = "weight" size = 10; maxlength="15"></h3>';
 
-        echo '<h3><input id = "submit" type = "submit" name = "submit" value = "Add Visit"></h3>';
+            echo '<h3><input id = "submit" type = "submit" name = "submit" value = "Add Visit"></h3>';
         echo '</form>';
         echo '<a href="patient.php?id=' . $patient_id . '">Cancel</a>';
     }
@@ -246,10 +246,12 @@
                     $r = mysqli_query($dbc,$q);
                     $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
 
-                    echo '<p> Prescription(s): </p>';
-                    echo '<ul>';
+                    echo '<p> Prescription(s): </p>';echo '<ul>';
                     foreach($r as $row) {
-                        echo '<li><strong>' . $row['name'] . '</strong> (<em>' . $row['description'] . '</em>)<ul>';
+                        echo '<li><strong>' . $row['name'] . '</strong> (<em>' . $row['description'] . '</em>)';
+                          echo '<a href="editPrescription.php?id=' . $row['prescript_id'] . '&id_doc=' . $id . '&id_pat=' . $id . '"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
+                          echo '<a href="deletePrescription.php?id=' . $row['prescript_id'] . '&id_doc=' . $id . '&id_pat=' . $id . '"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a></h2>';
+                          echo '<ul>';
                           echo '<li> Purpose - ' . $row['purpose'] . '</li>';
                           echo '<li> Possible Side Effects - ' . $row['sideEffects'] . '</li>';
                           echo '<li> Start Date: ' . $row['startDate'] . '</li>';
@@ -267,7 +269,7 @@
                         echo '</ul></li>';
                     }
                     echo '</ul>';
-                    echo '<a href="patient.php?id=' . $id . '&add=1">Add New Prescription</a><br><br>';
+                    echo '<a href="patient.php?id=' . $id . '&add=1">Add New Prescription</a><br>';
 
                     $q = "SELECT * FROM VISIT INNER JOIN PATIENT ON VISIT.patient_id = PATIENT.patient_id WHERE VISIT.patient_id = $id";
                     $r = mysqli_query($dbc,$q);
@@ -276,7 +278,10 @@
                     echo '<p> Visit(s): </p>';
                     echo '<ul>';
                     foreach($r as $row) {
-                        echo '<li><strong>' . $row['type'] . '</strong> (<em>' . $row['visitDate'] . '</em>)<ul>';
+                        echo '<li><strong>' . $row['type'] . '</strong> (<em>' . $row['visitDate'] . '</em>)';
+                          echo '<a href="editVisit.php?id=' . $row['visit_id'] . '&id_doc=' . $id . '&id_pat=' . $id . '"><span style="font-size:15px; padding-left: 20px;"">Edit</span></a>';
+                          echo '<a href="deleteVisit.php?id=' . $row['visit_id'] . '&id_doc=' . $id . '&id_pat=' . $id . '"><span style="font-size:15px; padding-left: 10px;"">Delete</span></a></h2>';
+                          echo '<ul>';
                           if ($row['diagnosis'] != '') {
                               echo '<li> Diagnosis - ' . $row['diagnosis'] . '</li>';
                           }
@@ -289,15 +294,20 @@
                           if ($row['height'] != '') {
                               echo '<li> Height - ' . $row['height'] . '</li>';
                           }
-                          if ($row['Weight'] != '') {
-                              echo '<li> Weight - ' . $row['Weight'] . '</li>';
+                          if ($row['weight'] != '') {
+                              echo '<li> Weight - ' . $row['weight'] . '</li>';
                           }
+                          $doc = $row['doctor_id'];
+                          $q = "SELECT * FROM DOCTOR WHERE doctor_id = $doc";
+                          $r = mysqli_query($dbc,$q);
+                          $results = mysqli_fetch_array($r, MYSQLI_ASSOC);
+                          echo '<li> Doctor - ' . $results['firstName'] . ' ' . $results['lastName'] . '</li>';
                         echo '</ul></li>';
                     }
                     echo '</ul>';
                     echo '<a href="patient.php?id=' . $id . '&new=1">Add New Visit</a><br><br>';
 
-                    echo "<a href='home.php'>Go Back</a>";
+                    echo "<a href='home.php'>Go Back</a><br><br>";
 
                 }
 
@@ -368,12 +378,11 @@
             $refills = mysqli_real_escape_string($dbc, trim($_POST['refills']));
         }
 
-        // checks for a drug name
+        // checks for a doctor name
         if (empty($_POST['doctor'])) {
             $errors[] = 'You forgot to enter the name of the doctor who prescribed the drug.';
         } else {
             $id_doc = mysqli_real_escape_string($dbc, trim($_POST['doctor']));
-            echo $id_doc;
         }
 
         if (isset($_GET['id'])) {
@@ -397,11 +406,11 @@
                 // checks if there were no errors
                 if ($drugs == 0) {
                     // inserts the new patient
-                    //$q = "INSERT INTO PRESCRIPTION (patient_id, doctor_id, drug_id, description, startDate, endDate, dosage, duration, size, numRefill) VALUES ('$id_pat', '$id_doc', '$drugID', '$desc', '$start_date',  '$end_date', '$dosage', '$duration', '$size', '$refills')";
-                    //$r = @mysqli_query($dbc, $q);
+                    $q = "INSERT INTO PRESCRIPTION (patient_id, doctor_id, drug_id, description, startDate, endDate, dosage, duration, size, numRefill) VALUES ('$id_pat', '$id_doc', '$drugID', '$desc', '$start_date',  '$end_date', '$dosage', '$duration', '$size', '$refills')";
+                    $r = @mysqli_query($dbc, $q);
                 } else {
-                    //echo '<p> The following error(s) occured:<br>';
-                    //echo " - Prescription already exists.";
+                    echo '<p> The following error(s) occured:<br>';
+                    echo " - Prescription already exists.";
                 }
 
             } else {

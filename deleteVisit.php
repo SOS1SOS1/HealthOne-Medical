@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title> Delete Hospital </title>
+    <title> Delete Visit </title>
     <link rel="stylesheet" href="main.css">
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
   </head>
@@ -37,34 +37,31 @@
     // requires that we are able to connect to the database using are hidden php file
     require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
 
-    // gets hospital information
-    $q = "SELECT * FROM HOSPITAL WHERE hospital_id = $id";
-    $r_hos = @mysqli_query($dbc, $q);
-    $row_hospital = mysqli_fetch_array($r_hos, MYSQLI_ASSOC);
+    // gets visit information
+    $q = "SELECT * FROM VISIT WHERE visit_id = $id";
+    $r_vis = @mysqli_query($dbc, $q);
+    $row_visit = mysqli_fetch_array($r_vis, MYSQLI_ASSOC);
+    $docID = $row_visit['doctor_id'];
 
-    echo '<form action = "deleteHospital.php?id=' . $id . '&id_doc=' . $id_doc . '&id_pat=' . $id_pat . '" method = "post">';
-        echo '<h3>Are you sure you want to delete the hospital, ' . $row_hospital['name'] . '?</h3>';
+    echo '<form action = "deleteVisit.php?id=' . $id . '&id_doc=' . $id_doc . '&id_pat=' . $id_pat . '" method = "post">';
+        echo '<h3>Are you sure you want to delete the ' . $row_visit['type'] . ' visit on, ' . $row_visit['visitDate'] . '?</h3>';
         echo '<input type="submit" name="submit" value="Confirm" id="submit"><br><br>';
     echo '</form>';
 
-    echo '<a href="hospital.php?id_hos=' . $id . '&id_doc=' . $id_doc . '&id_pat=' . $id_pat . '">Cancel</a>';
+    echo '<a href="patient.php?id=' . $id_pat . '">Cancel</a>';
 
     # checks that the form was submitted
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // deletes hospital information
-        $q = "DELETE FROM HOSPITAL WHERE hospital_id = $id";
-        $r = @mysqli_query($dbc, $q);
-
-        // delete hospital's affiliations
-        $q = "DELETE FROM HOSPITAL WHERE hospital = $id";
+        $q = "DELETE FROM VISIT WHERE visit_id = $id";
         $r = @mysqli_query($dbc, $q);
 
         mysqli_close($dbc);
 
-        // redirects user back to hospital page
-        $hospital_page = "http://shantim.smtchs.org/HealthOne_Medical/hospital.php?id_doc=" . $id_doc ."&id_hos=" . $id . "&id_pat=" . $id_pat;
-        echo "<script type='text/javascript'>window.top.location='$hospital_page';</script>"; exit;
+        // redirects user back to patient page
+        $patient_page = "http://shantim.smtchs.org/HealthOne_Medical/patient.php?id=" . $id_pat;
+        echo "<script type='text/javascript'>window.top.location='$patient_page';</script>"; exit;
 
     }
 

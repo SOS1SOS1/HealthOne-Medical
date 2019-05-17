@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title> Delete Doctor </title>
+    <title> Delete Prescription </title>
     <link rel="stylesheet" href="main.css">
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
   </head>
@@ -24,6 +24,9 @@
 <?php
 
     # checks that there is an id and that it is a number
+    if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+        $id = $_GET['id'];
+    }
     if (isset($_GET['id_doc']) && is_numeric($_GET['id_doc'])) {
         $id_doc = $_GET['id_doc'];
     }
@@ -34,27 +37,32 @@
     // requires that we are able to connect to the database using are hidden php file
     require_once('/moredata/shantim/etc/mysqli_connect_medical.php');
 
-    // gets doctor information
-    $q = "SELECT * FROM DOCTOR WHERE doctor_id = $id_doc";
-    $r_doc = @mysqli_query($dbc, $q);
-    $row_doctor = mysqli_fetch_array($r_doc, MYSQLI_ASSOC);
+    // gets visit information
+    $q = "SELECT * FROM PRESCRIPTION WHERE prescript_id = $id";
+    $r_pre = @mysqli_query($dbc, $q);
+    $row_prescript = mysqli_fetch_array($r_pre, MYSQLI_ASSOC);
 
-    echo '<form action = "deleteDoctor.php?id_doc=' . $id_doc . '&id_pat=' . $id_pat . '" method = "post">';
-        echo '<h3>Are you sure you want to delete the doctor, ' . $row_doctor['firstName'] . " " . $row_doctor['lastName'] . '?</h3>';
+    // doctor and drug id
+    $docID = $row_prescript['doctor_id'];
+    $drugID = $row_prescript['drug_id'];
+
+    // gets drug information
+    $q = "SELECT * FROM DRUG WHERE drug_id = $drugID";
+    $r_drug = @mysqli_query($dbc, $q);
+    $row_drug = mysqli_fetch_array($r_drug, MYSQLI_ASSOC);
+
+    echo '<form action = "deletePrescription.php?id=' . $id . '&id_pat=' . $id_pat . '" method = "post">';
+        echo '<h3>Are you sure you want to delete the ' . $row_drug['name'] . ' prescription starting on ' . $row_prescript['startDate'] . ' and ending on ' . $row_prescript['endDate'] . '?</h3>';
         echo '<input type="submit" name="submit" value="Confirm" id="submit"><br><br>';
     echo '</form>';
 
-    echo '<a href="doctor.php?id_doc=' . $id_doc . '&id_pat=' . $id_pat . '">Cancel</a>';
+    echo '<a href="patient.php?id=' . $id_pat . '">Cancel</a>';
 
     # checks that the form was submitted
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-        // deletes doctor information
-        $q = "DELETE FROM DOCTOR WHERE doctor_id = $id_doc";
-        $r = @mysqli_query($dbc, $q);
-
-        // delete doctor's affiliations
-        $q = "DELETE FROM AFFILIATION WHERE doctor = $id_doc";
+        // deletes hospital information
+        $q = "DELETE FROM PRESCRIPTION WHERE prescript_id = $id";
         $r = @mysqli_query($dbc, $q);
 
         mysqli_close($dbc);
