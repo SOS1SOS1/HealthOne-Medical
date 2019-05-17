@@ -4,9 +4,9 @@ html{
   background-color:#fcfaf7;
 }
 body{
-  margin-top: 70px;
-  height:100vh;
+  margin-top: 85px;
   padding-bottom:10px;
+  margin-bottom: 35px;
 }
 input[type=text], select, input[type=number], input[type=password] {
   padding: 10px 20px 10px 10px;
@@ -74,7 +74,6 @@ table{
   width:75%;
   height:auto;
   text-align:left;
-  padding-top: 15px;
 }
 td{
   text-align:left;

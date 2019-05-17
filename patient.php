@@ -269,7 +269,7 @@
                         echo '</ul></li>';
                     }
                     echo '</ul>';
-                    echo '<a href="patient.php?id=' . $id . '&add=1">Add New Prescription</a><br><br>';
+                    echo '<a href="patient.php?id=' . $id . '&add=1">Add New Prescription</a><br>';
 
                     $q = "SELECT * FROM VISIT INNER JOIN PATIENT ON VISIT.patient_id = PATIENT.patient_id WHERE VISIT.patient_id = $id";
                     $r = mysqli_query($dbc,$q);
@@ -294,8 +294,8 @@
                           if ($row['height'] != '') {
                               echo '<li> Height - ' . $row['height'] . '</li>';
                           }
-                          if ($row['Weight'] != '') {
-                              echo '<li> Weight - ' . $row['Weight'] . '</li>';
+                          if ($row['weight'] != '') {
+                              echo '<li> Weight - ' . $row['weight'] . '</li>';
                           }
                           $doc = $row['doctor_id'];
                           $q = "SELECT * FROM DOCTOR WHERE doctor_id = $doc";
@@ -305,9 +305,9 @@
                         echo '</ul></li>';
                     }
                     echo '</ul>';
-                    echo '<a href="patient.php?id=' . $id . '&new=1">Add New Visit</a><br><br><br>';
+                    echo '<a href="patient.php?id=' . $id . '&new=1">Add New Visit</a><br><br>';
 
-                    echo "<a href='home.php'>Go Back</a>";
+                    echo "<a href='home.php'>Go Back</a><br><br>";
 
                 }
 
